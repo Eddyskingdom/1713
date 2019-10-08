@@ -34,7 +34,7 @@
 
 
 /obj/item/projectile/arrow/arrow
-	damage = DAMAGE_LOW-24
+	damage = DAMAGE_LOW-28
 	penetrating = 0
 	armor_penetration = 0
 	icon_state = "arrow"
@@ -47,6 +47,8 @@
 	armor_penetration = 10
 	icon_state = "arrow"
 	damage_type = BURN
+	embed = FALSE
+	sharp = FALSE
 
 /obj/item/projectile/arrow/arrow/fire/gods
 	damage = DAMAGE_OH_GOD
@@ -368,8 +370,8 @@ obj/item/projectile/bullet/rifle/a556x45
 	name = "beanbag"
 	check_armor = "melee"
 	armor_penetration = 0
-	damage = DAMAGE_LOW/2
-	agony = DAMAGE_MEDIUM_HIGH
+	damage = 10
+	agony = 60
 	embed = FALSE
 	sharp = FALSE
 

@@ -122,6 +122,26 @@ bullet_act
 				visible_message("<span class = 'warning'>[src] blocks the arrow with the [SH.name]!</span>")
 				P.blockedhit = TRUE
 				SH.health -= 2
+				//ARROW FALL STUFF HERE
+				//50% chance for the arrow not to break.
+				if(prob(50))
+					if(istype(P, /obj/item/projectile/arrow/arrow/stone))
+						new/obj/item/ammo_casing/arrow/stone(src.loc)
+					else if(istype(P, /obj/item/projectile/arrow/arrow/copper))
+						new/obj/item/ammo_casing/arrow/copper(src.loc)
+					else if(istype(P, /obj/item/projectile/arrow/arrow/iron))
+						new/obj/item/ammo_casing/arrow/iron(src.loc)
+					else if(istype(P, /obj/item/projectile/arrow/arrow/bronze))
+						new/obj/item/ammo_casing/arrow/bronze(src.loc)
+					else if(istype(P, /obj/item/projectile/arrow/arrow/steel))
+						new/obj/item/ammo_casing/arrow/steel(src.loc)
+					else if(istype(P, /obj/item/projectile/arrow/arrow/modern))
+						new/obj/item/ammo_casing/arrow/modern(src.loc)
+					else
+						new/obj/item/ammo_casing/arrow(src.loc)
+					visible_message("<span class = 'warning'>The arrow falls to the ground!</span>")
+				else
+					visible_message("<span class = 'warning'>The arrow shatters!</span>")
 				return
 
 	if (shield_check)
@@ -211,7 +231,14 @@ bullet_act
 			stats["stamina"][1] = max(stats["stamina"][1] - 50, 0)
 			if (client)
 				shake_camera(src, rand(2,3), rand(2,3))
-
+		if (istype(P, /obj/item/projectile/bullet/shotgun/beanbag))
+			Weaken(8)
+			if (prob(50))
+				Paralyse(5)
+			stats["stamina"][1] = max(stats["stamina"][1] - 70, 0)
+			if (client)
+				shake_camera(src, rand(2,3), rand(2,3))
+			emote("painscream")
 	//Shrapnel
 	if (P.can_embed())
 		var/armor = getarmor_organ(organ, "gun")
@@ -226,7 +253,16 @@ bullet_act
 		gib()
 	else if (P.crushes)
 		crush()
+	if (istype(P, /obj/item/projectile/arrow/arrow/fire))
+		if (prob(5))
+			fire_stacks += 1
+		IgniteMob()
 
+	..(P, def_zone)
+	instadeath_check()
+
+	spawn (0.01)
+		qdel(P)
 
 /mob/living/carbon/human/stun_effect_act(var/stun_amount, var/agony_amount, var/def_zone)
 	var/obj/item/organ/external/affected = get_organ(check_zone(def_zone))

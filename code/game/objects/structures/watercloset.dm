@@ -629,7 +629,10 @@
 
 	O.clean_blood()
 	if (istype(O, /obj/item/clothing))
-		O.radiation = 0
+		var/obj/item/clothing/C = O
+		C.radiation = 0
+		C.dirtyness = 0
+		C.fleas = FALSE
 	user.visible_message( \
 		"<span class='notice'>[user] washes \a [I] using \the [src].</span>", \
 		"<span class='notice'>You wash \a [I] using \the [src].</span>")
@@ -660,6 +663,13 @@
 /obj/structure/sink/well
 	name = "well"
 	icon_state = "well1"
+	sound = 'sound/effects/watersplash.ogg'
+	max_volume = 750
+	volume = 750
+
+/obj/structure/sink/well/sandstone
+	name = "sandstone well"
+	icon_state = "sandstone_well1"
 	sound = 'sound/effects/watersplash.ogg'
 	max_volume = 750
 	volume = 750
@@ -695,6 +705,11 @@
 			icon_state = "well_dry"
 		else
 			icon_state = "well1"
+	else if  (istype(src, /obj/structure/sink/well/sandstone))
+		if (dry || volume <= 0)
+			icon_state = "sandstone_well_dry"
+		else
+			icon_state = "sandstone_well1"
 
 /obj/structure/sink/New()
 	..()

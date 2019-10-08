@@ -1,6 +1,8 @@
 /obj/structure/vehicleparts/frame/update_icon()
 	..()
 	overlays.Cut()
+	if (!axis)
+		dir = 1
 	if (axis && mwheel)
 		if (broken)
 			icon = broken_icon
@@ -65,7 +67,7 @@
 						movemento.pixel_x = 0
 						movemento.pixel_y = -22
 						overlays += movemento
-	if (!noroof)
+	if (!noroof && axis)
 		roof = image(icon=icon, loc=src, icon_state="roof_steel[rand(1,4)][color_code]", layer=11)
 		roof.overlays.Cut()
 	else
@@ -140,7 +142,7 @@
 		else if (istype(CC, /obj/item/weapon/reagent_containers/glass/barrel/fueltank) && istype(axis, /obj/structure/vehicleparts/axis/heavy))
 			roof.icon_state = "roof_steel_closedhatch[color_code]"
 	var/ticon = normal_icon
-	if (!noroof)
+	if (!noroof && axis)
 		if (broken)
 			ticon = broken_icon
 		else

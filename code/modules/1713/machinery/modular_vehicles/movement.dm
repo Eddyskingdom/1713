@@ -5,7 +5,7 @@
 	icon_state = "wheel_t_dark"
 	var/base_icon = "wheel_t_dark"
 	var/movement_icon = "wheel_t_dark_m"
-	layer = 2.97
+	layer = 2.99
 	var/reversed = FALSE
 	var/obj/structure/vehicleparts/axis/axis = null
 	var/obj/structure/vehicleparts/frame/connected = null
@@ -35,22 +35,48 @@
 	if (broken)
 		icon_state = "[base_icon][axis.color_code]_broken"
 	else
-		if (axis.moving && axis.currentspeed > 0)
-			icon_state = "[movement_icon][axis.color_code]"
-		else
-			icon_state = "[base_icon][axis.color_code]"
+		if (axis)
+			if (axis.moving && axis.currentspeed > 0)
+				icon_state = "[movement_icon][axis.color_code]"
+			else
+				icon_state = "[base_icon][axis.color_code]"
 	if (connected)
 		connected.update_icon()
 		return
 /obj/structure/vehicleparts/movement/MouseDrop(var/obj/structure/vehicleparts/frame/VP)
 	if (istype(VP, /obj/structure/vehicleparts/frame) && VP.axis)
-		VP.axis.wheels += src
-		axis = VP.axis
-		connected = VP
-		VP.mwheel = src
-		forceMove(VP)
-		playsound(loc, 'sound/effects/lever.ogg',80, TRUE)
+		//Front-Right, Front-Left, Back-Right,Back-Left; FR, FL, BR, BL
+		if (!isemptylist(VP.axis.corners))
+			if (VP == VP.axis.corners[1])
+				reversed = FALSE
+			else if (VP == VP.axis.corners[2])
+				if (ntype == "wheel")
+					reversed = TRUE
+				else
+					reversed = FALSE
+			else if (VP == VP.axis.corners[3])
+				if (ntype == "wheel")
+					reversed = FALSE
+				else
+					reversed = TRUE
+			else if (VP == VP.axis.corners[4])
+				if (ntype == "wheel")
+					reversed = TRUE
+				else
+					reversed = TRUE
+			else
+				return
 
+			if (reversed)
+				dir = OPPOSITE_DIR(VP.axis.dir)
+			else
+				dir = VP.axis.dir
+			VP.axis.wheels += src
+			axis = VP.axis
+			connected = VP
+			VP.mwheel = src
+			forceMove(VP)
+			playsound(loc, 'sound/effects/lever.ogg',80, TRUE)
 /obj/structure/vehicleparts/movement/attackby(var/obj/item/I, var/mob/living/carbon/human/H)
 	if (broken && istype(I, /obj/item/weapon/weldingtool))
 		visible_message("[H] starts repairing \the [ntype]...")

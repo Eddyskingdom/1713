@@ -211,7 +211,7 @@ var/global/list/tank_names_soviet = list("Slavianka", "Katya", "Rodina", "Vernyi
 	if (!engine || !engine.fueltank)
 		engine.on = FALSE
 		return FALSE
-	else if (get_weight() > engine.maxpower)
+	else if (get_weight() > engine.maxpower*2 || get_weight() > maxpower)
 		visible_message("<span class='warning'>\The [engine] struggles and stalls!</span>")
 		return FALSE
 	else
@@ -405,6 +405,32 @@ var/global/list/tank_names_soviet = list("Slavianka", "Katya", "Rodina", "Vernyi
 				MV.axis = src
 				MV.connected = FM
 				FM.mwheel = MV
+	for(var/obj/structure/vehicleparts/movement/MV in wheels)
+		//Front-Right, Front-Left, Back-Right,Back-Left; FR, FL, BR, BL
+		if (MV.connected == corners[1])
+			MV.reversed = FALSE
+		else if (MV.connected == corners[2])
+			if (MV.ntype == "wheel")
+				MV.reversed = TRUE
+			else
+				MV.reversed = FALSE
+		else if (MV.connected == corners[3])
+			if (MV.ntype == "wheel")
+				MV.reversed = TRUE
+			else
+				MV.reversed = FALSE
+		else if (MV.connected == corners[4])
+			if (MV.ntype == "wheel")
+				MV.reversed = TRUE
+			else
+				MV.reversed = TRUE
+		else
+			return
+
+		if (MV.reversed)
+			MV.dir = OPPOSITE_DIR(dir)
+		else
+			MV.dir = dir
 	if (corners[1] != null && corners[2] != null && corners[3] != null && corners[4] != null)
 		return TRUE
 	else
@@ -515,3 +541,46 @@ var/global/list/tank_names_soviet = list("Slavianka", "Katya", "Rodina", "Vernyi
 		spawn(1200)
 			if (!link)
 				qdel(src)
+
+
+/obj/structure/vehicleparts/axis/attack_hand(var/mob/living/carbon/human/H)
+	if (!ishuman(H))
+		return
+	for(var/obj/structure/vehicleparts/frame/F1 in get_turf(get_step(src, WEST)))
+		H << "<span class='notice'>The axis needs to be placed at the <b>TOP LEFT</b> corner!</span>"
+		return
+	for(var/obj/structure/vehicleparts/frame/F2 in get_turf(get_step(src, NORTH)))
+		H << "<span class='notice'>The axis needs to be placed at the <b>TOP LEFT</b> corner!</span>"
+		return
+	var/inp = WWinput(H, "Are you sure you wan't to assemble a vehicle here? This has to be the top left corner.", "Vehicle Assembly", "No", list("No", "Yes"))
+	if (inp == "No")
+		return
+	for(var/obj/structure/vehicleparts/frame/F in loc)
+		if (F.axis && F.axis != src)
+			return
+		var/customname = input(H, "What do you want to name this vehicle?") as text
+		if (!customname || customname == "")
+			name = "[H]'s vehicle"
+		else
+			name = customname
+		var/list/vehiclecolors = list(
+			list("light gray","#A9A9A9"),
+			list("medium gray","#585A5C"),
+			list("dark gray","#3B3F41"),
+			list("green","#3d5931"),
+			list("pale green","#636351"),
+			list("Feldgrau (WW1)","#5D5D3D"),
+			list("Feldgrau (WW2)","#4D5D53"),
+			list("light khaki","#F0E68C"),
+			list("dark khaki","#BDB76B"),
+			list("olive drab","#555346"),)
+		var/choosecolor1 = WWinput(H, "Choose this vehicle's color:", "Vehicle Color", "medium gray", list("light gray", "medium gray", "dark gray", "green", "pale green", "Feldgrau (WW1)", "Feldgrau (WW2)", "light khaki", "dark khaki", "olive drab"))
+			for (var/i in vehiclecolors)
+				if (i[1] == choosecolor1)
+					color = i[2]
+		dir = 1
+		new/obj/effect/autoassembler(locate(x+2,y-2,z))
+		H << "<span class='warning'>Vehicle assembled.</span>"
+		for (var/obj/O in components)
+			O.update_icon()
+		return

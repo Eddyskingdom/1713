@@ -47,6 +47,12 @@
 		tmpsum += L.mob_size*2
 	return tmpsum
 
+/obj/structure/vehicleparts/frame/examine(mob/user)
+	..()
+	if (axis)
+		if (user in range(1,src))
+			user << "<span class='notice'>Current Weight: <b>[axis.get_weight()]</b>.</span>"
+
 /obj/structure/vehicleparts/frame/MouseDrop(var/obj/structure/vehicleparts/frame/VP)
 	if (istype(VP, /obj/structure/vehicleparts/frame) && VP.axis && !axis)
 		if (abs(VP.y-y) > 5 || abs(VP.x-x) > 5)
@@ -231,45 +237,60 @@
 			if (do_after(H, 200, src))
 				visible_message("[H] sucessfully repairs \the [mwheel.ntype].")
 				mwheel.broken = FALSE
+				mwheel.update_icon()
+				update_icon()
 				return
+	else if (istype(I,/obj/item/weapon/wrench) && !axis)
+		anchored = !anchored
+		if (anchored)
+			H << "You fix the frame in place."
+			return
+		else
+			H << "You release the frame."
+			return
 	else if (istype(I,/obj/item/weapon/key))
 		var/obj/item/weapon/key/K = I
-		if (K.code == doorcode)
-			if (w_front[6])
-				if (w_front[7])
-					visible_message("[H] locks the door.")
-					w_front[7] = FALSE
-				else
-					visible_message("[H] unlocks the door.")
-					w_front[7] = TRUE
-				H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-			if (w_back[6])
-				if (w_back[7])
-					visible_message("[H] locks the door.")
-					w_back[7] = FALSE
-				else
-					visible_message("[H] unlocks the door.")
-					w_back[7] = TRUE
-				H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-			if (w_left[6])
-				if (w_left[7])
-					visible_message("[H] locks the door.")
-					w_left[7] = FALSE
-				else
-					visible_message("[H] unlocks the door.")
-					w_left[7] = TRUE
-				H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-			if (w_right[6])
-				if (w_right[7])
-					visible_message("[H] locks the door.")
-					w_right[7] = FALSE
-				else
-					visible_message("[H] unlocks the door.")
-					w_right[7] = TRUE
-				H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-			playsound(src.loc, 'sound/effects/door_lock_unlock.ogg', 100)
+		if (doorcode)
+			if (K.code == doorcode)
+				if (w_front[6])
+					if (w_front[7])
+						visible_message("[H] locks the door.")
+						w_front[7] = FALSE
+					else
+						visible_message("[H] unlocks the door.")
+						w_front[7] = TRUE
+					H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+				if (w_back[6])
+					if (w_back[7])
+						visible_message("[H] locks the door.")
+						w_back[7] = FALSE
+					else
+						visible_message("[H] unlocks the door.")
+						w_back[7] = TRUE
+					H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+				if (w_left[6])
+					if (w_left[7])
+						visible_message("[H] locks the door.")
+						w_left[7] = FALSE
+					else
+						visible_message("[H] unlocks the door.")
+						w_left[7] = TRUE
+					H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+				if (w_right[6])
+					if (w_right[7])
+						visible_message("[H] locks the door.")
+						w_right[7] = FALSE
+					else
+						visible_message("[H] unlocks the door.")
+						w_right[7] = TRUE
+					H.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+				playsound(src.loc, 'sound/effects/door_lock_unlock.ogg', 100)
+			else
+				H << "This key does not match this lock!"
+				return
 		else
-			H << "This key does not match this lock!"
+			doorcode = K.code
+			H << "You assign this key to the lock."
 			return
 	else
 		..()
