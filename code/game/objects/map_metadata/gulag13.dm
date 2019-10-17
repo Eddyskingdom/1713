@@ -2,9 +2,9 @@
 /obj/map_metadata/gulag13
 	ID = MAP_GULAG13
 	title = "GULAG 13 (120x100x1)"
-	lobby_icon_state = "ww2"
+	lobby_icon_state = "camp"
 	caribbean_blocking_area_types = list(/area/caribbean/no_mans_land/invisible_wall/tundra)
-	respawn_delay = 600
+	respawn_delay = 3600
 	squad_spawn_locations = FALSE
 	faction_organization = list(
 		RUSSIAN,
@@ -17,7 +17,7 @@
 		)
 	age = "1946"
 	ordinal_age = 6
-	faction_distribution_coeffs = list(RUSSIAN = 0.2, CIVILIAN = 0.8)
+	faction_distribution_coeffs = list(RUSSIAN = 0.25, CIVILIAN = 0.75)
 	battle_name = "Gulag nr. 13"
 	mission_start_message = "<font size=4>All factions have <b>4 minutes</b> to prepare before the grace wall is removed.<br>The <b>NKVD</b> must keep the prisoners contained, and make them serve the Soviet Union with forced labor. The <b>Prisoners</b> must try to survive, increase their faction power, and if possible, escape.</font>"
 	faction1 = RUSSIAN
@@ -27,11 +27,11 @@
 		"The Great Escape:1" = 'sound/music/the_great_escape.ogg')
 	gamemode = "Prison Simulation"
 	var/list/points = list(
-		list("Guards",0),
-		list("Vory",0),
-		list("Germans",0),
-		list("Polish",0),
-		list("Ukrainians",0),
+		list("Guards",0,0),
+		list("Vory",0,0),
+		list("German",0,0),
+		list("Polish",0,0),
+		list("Ukrainian",0,0),
 	)
 	var/gracedown1 = TRUE
 	var/siren = FALSE
@@ -98,15 +98,65 @@ obj/map_metadata/gulag13/job_enabled_specialcheck(var/datum/job/J)
 		return ""
 /obj/map_metadata/gulag13/New()
 	..()
+	spawn(100)
+		load_new_recipes()
 	spawn(3000)
 		check_points_msg()
+		config.no_respawn_delays = FALSE
+
+/obj/map_metadata/gulag13/proc/load_new_recipes()
+	var/F3 = file("config/material_recipes_camp.txt")
+	if (fexists(F3))
+		craftlist_list = list()
+		var/list/craftlist_temp = file2list(F3,"\n")
+		for (var/i in craftlist_temp)
+			if (findtext(i, ","))
+				var/tmpi = replacetext(i, "RECIPE: ", "")
+				var/list/current = splittext(tmpi, ",")
+				craftlist_list += list(current)
+				if (current.len != 13)
+					world.log << "Error! Recipe [current[2]] has a length of [current.len] (should be 13)."
+/obj/map_metadata/gulag13/proc/check_points()
+	for(var/i in points)
+		if (i[1] != "Guards")
+			i[2]=0
+	for (var/mob/living/carbon/human/H in player_list)
+		if (H.stat!=DEAD && H.original_job && istype(H.original_job, /datum/job/civilian/prisoner))
+			var/datum/job/civilian/prisoner/PJ = H.original_job
+			var/curval = 0
+			var/area/A = get_area(H)
+			if (istype(A, /area/caribbean/nomads/ice/target))
+				for(var/i in points)
+					if (i[1]==PJ.nationality)
+						i[3]+=4
+					else if (i[1]!="Guards")
+						i[3]+=2
+			for(var/obj/item/stack/money/rubles/R in H)
+				curval += R.amount
+			if (H.wear_suit && istype(H.wear_suit, /obj/item/clothing/suit/storage))
+				var/obj/item/clothing/suit/storage/ST = H.wear_suit
+				for(var/obj/item/stack/money/rubles/R in ST.pockets)
+					curval += R.amount
+			for(var/i in points)
+				if (i[1]==PJ.nationality)
+					i[2]+=curval
+	return
 
 /obj/map_metadata/gulag13/proc/check_points_msg()
+	check_points()
 	spawn(1)
 		world << "<font size = 4><span class = 'notice'><b>Current Score:</b></font></span>"
 		for (var/i=1,i<=points.len,i++)
-			world << "<br><font size = 3><span class = 'notice'>[points[i][1]]: <b>[points[i][2]]</b></span></font>"
-	spawn(3000)
+			world << "<br><font size = 3><span class = 'notice'>[points[i][1]]: <b>[points[i][2]+points[i][3]]</b></span></font>"
+		var/donecheck = FALSE
+		for(var/mob/living/carbon/human/H in player_list)
+			if(H.stat!=DEAD && H.original_job && istype(H.original_job, /datum/job/civilian/prisoner) && !donecheck)
+				var/area/A = get_area(H)
+				if (istype(A, /area/caribbean/nomads/ice/target))
+					world << "<br><font size = 3><span class = 'warning'>There are prisoners currently escaping!</span></font>"
+					donecheck = TRUE
+
+	spawn(2400)
 		check_points_msg()
 	return
 
@@ -121,7 +171,7 @@ obj/map_metadata/gulag13/job_enabled_specialcheck(var/datum/job/J)
 			else
 				return FALSE
 		else
-			return (faction1_can_cross_blocks() || faction2_can_cross_blocks())
+			return (!faction1_can_cross_blocks() || !faction2_can_cross_blocks())
 	return FALSE
 
 #undef NO_WINNER
@@ -134,6 +184,7 @@ obj/map_metadata/gulag13/job_enabled_specialcheck(var/datum/job/J)
 	item_state = "paper"
 	throwforce = FALSE
 	w_class = TRUE
+	slot_flags = SLOT_ID | SLOT_POCKET
 	throw_range = TRUE
 	throw_speed = TRUE
 	attack_verb = list("bapped")
@@ -251,3 +302,28 @@ obj/map_metadata/gulag13/job_enabled_specialcheck(var/datum/job/J)
 			if (siren)
 				alarm_proc()
 			return
+
+
+/obj/structure/camp_exportbook
+	name = "camp exports"
+	desc = "Use this to export products from the camp and gain points for the guards."
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "supplybook2"
+	density = TRUE
+	anchored = TRUE
+	not_movable = TRUE
+	not_disassemblable = TRUE
+
+/obj/structure/camp_exportbook/attackby(var/obj/item/stack/S, var/mob/living/carbon/human/H)
+	var/obj/map_metadata/gulag13/G = null
+	if (!istype(map, /obj/map_metadata/gulag13))
+		return
+	else
+		G = map
+	if (istype(S, /obj/item/stack/ore) || istype(S, /obj/item/stack/material/wood))
+		for(var/i in G.points)
+			if (i[1]=="Guards")
+				i[2]+=S.amount*S.value
+				H << "You export \the [S]."
+				qdel(S)
+				return

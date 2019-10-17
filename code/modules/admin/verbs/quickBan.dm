@@ -418,13 +418,10 @@ var/datum/quickBan_handler/quickBan_handler = null
 		var/list/details2 = splittext(details, ";")
 		if (details2[1] == bantype && text2num(details2[7])>world.realtime)
 			fields = details2
-	if (fields == FALSE)
+	if (isemptylist(fields))
 		return
 
-	if (fields[2] && fields[2] != "nil")
-		return FALSE
-
-	var/reason = fields[2]
+	var/reason = fields[4]
 	var/date = fields[6]
 	var/expire_info = fields[8]
 

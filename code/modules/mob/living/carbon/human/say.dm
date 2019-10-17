@@ -9,7 +9,7 @@
 	var/alt_name = ""
 
 	if (name != GetVoice())
-		alt_name = "(as [get_id_name()])"
+		alt_name = get_visible_name()
 	var/animalistic = FALSE
 	if ((werewolf || gorillaman) && body_build.name != "Default")
 		if (werewolf)
@@ -20,6 +20,10 @@
 				message = pick("uh uh uh!","UH UH", "OOGA", "BOOGA")
 				animalistic = TRUE
 	message = capitalize_cp1251(sanitize(message))
+
+	for (var/i in dictionary_list)
+		message = replacetext(message,i[1],i[2])
+
 	var/message_without_html = message
 
 	if (dd_hassuffix(message, "!") && !dd_hassuffix(message, "!!"))
@@ -59,7 +63,7 @@
 				else
 					PRD.broadcast(message_without_html, src)
 
-		for (var/obj/structure/telephone/TL in range(2,src))
+		for (var/obj/item/weapon/telephone/TL in range(2,src))
 			if (TL.connected)
 				TL.broadcast(message_without_html, src)
 

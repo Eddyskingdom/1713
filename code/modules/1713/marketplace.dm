@@ -145,3 +145,64 @@
 				ST.forceMove(locate(0,0,0))
 				user << "You place \the [ST] for sale."
 				return
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/obj/structure/stockmarket
+	name = "stock market"
+	desc = "Use this to buy, sell and check company shares. You can also manage your companies here."
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "supplybook"
+	density = TRUE
+	anchored = TRUE
+	flammable = FALSE
+	not_movable = FALSE
+
+	var/list/sale_registry = list()
+
+/obj/structure/stockmarket/attack_hand(var/mob/living/carbon/human/user as mob)
+	var/choice1 = WWinput(user, "What do you want to do?", "Stock Market", "Check Companies", list("Check Companies","Buy Stock","Sell Stock","Cancel"))
+	if (choice1 == "Cancel")
+		return
+	else if (choice1 == "Check Companies")
+		var/list/tmplistc = sortTim(map.custom_company_value, /proc/cmp_numeric_dsc,TRUE)
+		var/body = "<html><head><title>Stock Market Companies</title></head><b>STOCK MARKET</b><br><br>"
+		for (var/relf in map.custom_company_nr)
+			body += "<b>[relf]</b>: [tmplistc[relf]*10] silver coins</br>"
+		body += {"<br>
+			</body></html>
+		"}
+
+		usr << browse(body,"window=artillery_window;border=1;can_close=1;can_resize=1;can_minimize=0;titlebar=1;size=250x450")
+	else if (choice1 == "Buy Stock")
+		if (isemptylist(sale_registry))
+			user << "<span class='notice'>There are no stocks for sale!</span>"
+			return
+	else if (choice1 == "Sell Stock")
+		var/list/poss_list = list()
+		for(var/cmp in map.custom_company_nr)
+			if (find_company_member(user,cmp))
+				poss_list += cmp
+		if (isemptylist(poss_list))
+			user << "<span class='notice'>You do not own any stocks!</span>"
+			return
+		poss_list += "Cancel"
+		var/choice2 = WWinput(user, "Which stock do you want to sell?", "Stock Market", "Cancel", poss_list)
+		if (choice2 == "Cancel")
+			return
+		else
+			for(var/list/i in map.custom_company[choice2])
+				if (i[1] == user)
+					var/compchoice_amt = input(user, "You own [i[2]]% of [choice2]. How much do you want to put up for sale? (1 to [i[2]])") as num|null
+					compchoice_amt = round(compchoice_amt)
+					if (compchoice_amt > i[2])
+						compchoice_amt = i[2]
+					else if (compchoice_amt <= 0)
+						return
+					var/saleprice = input(user, "At what price do you want to sell the [i[2]]% of [choice2]?") as num|null
+					if (saleprice <=0)
+						return
+					else
+						sale_registry += list(list(choice2,saleprice,user))
+						user << "<span class='notice'>You sucessfully put up [i[2]]% of [choice2] at [saleprice].</span>"
+						return

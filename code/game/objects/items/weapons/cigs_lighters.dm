@@ -33,7 +33,6 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	var/burnt = FALSE
 	var/smoketime = 5
 	w_class = 1.0
-//	origin_tech = list(TECH_MATERIAL = TRUE)
 	slot_flags = SLOT_EARS
 	attack_verb = list("burnt", "singed")
 
@@ -41,13 +40,9 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if (isliving(loc))
 		var/mob/living/M = loc
 		M.IgniteMob()
-	var/turf/location = get_turf(src)
 	smoketime--
 	if (smoketime < 1)
 		burn_out()
-		return
-	if (location)
-		location.hotspot_expose(700, 5)
 		return
 
 /obj/item/weapon/flame/match/dropped(mob/user as mob)
@@ -55,9 +50,6 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	//not before lighting up the turf we land on, though.
 	if (lit)
 		spawn(0)
-			var/turf/location = loc
-			if (istype(location))
-				location.hotspot_expose(700, 5)
 			burn_out()
 	return ..()
 
@@ -96,13 +88,10 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	create_reagents(chem_volume) // making the cigarrete a chemical holder with a maximum volume of 15
 
 /obj/item/clothing/mask/smokable/process()
-	var/turf/location = get_turf(src)
 	smoketime--
 	if (smoketime < 1)
 		die()
 		return
-	if (location)
-		location.hotspot_expose(700, 5)
 	if (reagents && reagents.total_volume) // check if it has any reagents at all
 		if (ishuman(loc))
 			var/mob/living/carbon/human/C = loc
@@ -512,7 +501,4 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		..()
 
 /obj/item/weapon/flame/lighter/process()
-	var/turf/location = get_turf(src)
-	if (location)
-		location.hotspot_expose(700, 5)
 	return

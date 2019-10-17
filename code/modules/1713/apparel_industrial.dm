@@ -11,7 +11,7 @@
 	item_state = "cowboy"
 /obj/item/clothing/head/cowboyhat2
 	name = "dark cowboy hat"
-	desc = "a dark, curved leather hat."
+	desc = "a grayish, curved leather hat."
 	icon_state = "cowboy2"
 	item_state = "cowboy2"
 /obj/item/clothing/head/unionhat
@@ -342,3 +342,22 @@ obj/item/clothing/under/confederate_uniform/New()
 	worn_state = "kozhanka_w"
 	specific = TRUE
 	colorn = 2
+
+/obj/item/weapon/watch/pocket
+	name = "pocket watch"
+	desc = "Used to check the time."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "pocketwatch"
+	item_state = "pocketwatch"
+	flammable = FALSE
+	density = FALSE
+	opacity = FALSE
+	slot_flags = SLOT_ID | SLOT_POCKET
+	w_class = 1
+	force = WEAPON_FORCE_WEAK
+	throwforce = WEAPON_FORCE_HARMLESS
+
+/obj/item/weapon/watch/pocket/attack_self(var/mob/living/L)
+	L << "<big>It is now [clock_time()].</big>"
+	return
+

@@ -372,6 +372,18 @@ RUSSO-JAPANESE WAR WEAPONS MAGS N AMMO
 	mag_type = SPEEDLOADER
 	pouch = TRUE
 
+/obj/item/ammo_magazine/c32
+	name = "bullet pouch (.33 long)"
+	desc = "a pouch of 26 .32 bullets."
+	icon_state = "pouch"
+	ammo_type = /obj/item/ammo_casing/a32
+	caliber = "a32"
+	max_ammo = 26
+	weight = 0.9
+	multiple_sprites = TRUE
+	mag_type = SPEEDLOADER
+	pouch = TRUE
+
 /obj/item/ammo_magazine/c45
 	name = "bullet pouch (.45 Colt)"
 	desc = "a pouch of 11.43xmmR bullets."
@@ -511,7 +523,6 @@ RUSSO-JAPANESE WAR WEAPONS MAGS N AMMO
 /obj/item/ammo_magazine/shellbox
 	name = "shotgun buckshot box (.12 gauge)"
 	icon_state = "shellbox"
-//	origin_tech = "combat=2"
 	mag_type = MAGAZINE
 	caliber = "12guage"
 	w_class = 3
