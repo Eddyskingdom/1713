@@ -23,6 +23,7 @@
 					// if one of us is the host, don't show us this warning. Because we're probably testing.
 					if (M && M.client && !(M.client.holder.rights == 65535) && !(client.holder.rights == 65535))
 						spawn(0) WWalert(src, "You have logged in already with another key this round, please log out of this one NOW or risk being banned!", "Warning!")
+/*
 				if (matches)
 					if (M.client)
 						message_admins("<font color='red'><b>Notice: </b></font><span class = 'notice'><A href='?src=\ref[usr];priv_msg=\ref[src]'>[key_name_admin(src)]</A> has the same [matches] as <A href='?src=\ref[usr];priv_msg=\ref[M]'>[key_name_admin(M)]</A>.</span>", TRUE)
@@ -30,9 +31,11 @@
 					else
 						message_admins("<font color='red'><b>Notice: </b></font><span class = 'notice'><A href='?src=\ref[usr];priv_msg=\ref[src]'>[key_name_admin(src)]</A> has the same [matches] as [key_name_admin(M)] (no longer logged in). </span>", TRUE)
 						log_access("Notice: [key_name(src)] has the same [matches] as [key_name(M)] (no longer logged in).")
-
+*/
 /mob/Login()
-	winset(src, null, "mainwindow.title='[customserver_name()]'")
+	if (!client)
+		return
+	winset(client, null, "mainwindow.title='[customserver_name()]'")
 	player_list |= src
 	update_Login_details()
 	world.update_status()
@@ -56,4 +59,4 @@
 			client.perspective = MOB_PERSPECTIVE
 
 	//set macro to normal incase it was overriden.
-	winset(src, null, "mainwindow.macro=macro hotkey_toggle.is-checked=false input.focus=true input.background-color=#D3B5B5")
+	winset(client, null, "mainwindow.macro=macro hotkey_toggle.is-checked=false input.focus=true input.background-color=#D3B5B5")

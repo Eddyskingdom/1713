@@ -7,6 +7,7 @@
 	icon_state = null
 	resting_state = null
 	wander = FALSE
+	can_be_tamed = TRUE
 
 	// COMMANDS
 	// format is "word;jobtitle&jobtitle;proc"
@@ -425,7 +426,7 @@ s
 /mob/living/simple_animal/complex_animal/dog/onTouchedBy(var/mob/living/carbon/human/H, var/intent = I_HELP)
 	if (..(H, intent) && stat == CONSCIOUS && !resting)
 		switch (intent)
-			if (I_HURT)
+			if (I_HARM)
 
 				enemies |= H
 

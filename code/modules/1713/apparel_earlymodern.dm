@@ -176,6 +176,17 @@
 	value = 65
 	var/colorn = 1
 
+/obj/item/clothing/suit/storage/coat/priest
+	name = "priest sleev"
+	desc = "A holy coat worn by a priest."
+	icon_state = "priestwhite"
+	item_state = "priestwhite"
+	worn_state = "priestwhite"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	cold_protection = UPPER_TORSO|LOWER_TORSO|LEG_LEFT|LEG_RIGHT|ARM_LEFT|ARM_RIGHT
+	armor = list(melee = 10, arrow = 0, gun = FALSE, energy = 15, bomb = 5, bio = 30, rad = 30)
+	value = 65
+	var/colorn = 1
 
 /obj/item/clothing/suit/storage/coat/japcoat2
 	name = "Japanese Coat"
@@ -452,6 +463,13 @@
 	item_state = "modern7"
 	worn_state = "modern7"
 
+/obj/item/clothing/under/baily
+	name = "security outfit"
+	desc = "An outfit composed of a green jacket and black pants."
+	icon_state = "baily"
+	item_state = "baily"
+	worn_state = "baily"
+
 /obj/item/clothing/under/modern8
 	name = "modern skirt"
 	desc = "An outfit composed of a black skirt and white shirt."
@@ -465,6 +483,13 @@
 	icon_state = "oldmansuit"
 	item_state = "oldmansuit"
 	worn_state = "oldmansuit"
+
+/obj/item/clothing/under/cozyoldy
+	name = "fancy outfit"
+	desc = "An outfit worn by fancy men in the 1800s."
+	icon_state = "cozyoldy"
+	item_state = "cozyoldy"
+	worn_state = "cozyoldy"
 
 /obj/item/clothing/under/peakyblinder
 	name = "fancy suit"

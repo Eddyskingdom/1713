@@ -5,6 +5,7 @@
 	icon_state = "rack"
 	flipped = -1
 	low = TRUE
+	fixedsprite = TRUE
 
 /obj/structure/table/rack/New()
 	..()
@@ -19,3 +20,12 @@
 
 /obj/structure/table/rack/update_icon()
 	return
+
+/obj/structure/table/fancy
+	name = "table"
+	desc = "A old expensive table."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "fancytable"
+	flipped = -1
+	low = TRUE
+	fixedsprite = TRUE

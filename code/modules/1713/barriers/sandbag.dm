@@ -4,9 +4,10 @@
 /mob/living/carbon/human/var/crouching = FALSE
 
 /obj/structure/window/sandbag
+	icon = 'icons/obj/structures.dmi'
 	name = "dirt wall"
 	icon_state = "dirt_wall"
-	layer = MOB_LAYER + 0.01 //just above mobs
+	layer = MOB_LAYER + 0.5 //just above mobs
 	anchored = TRUE
 	climbable = TRUE
 	mouse_drop_zone = TRUE
@@ -14,7 +15,7 @@
 /obj/structure/window/sandbag/sandbag
 	name = "sandbag wall"
 	icon_state = "sandbag"
-	layer = MOB_LAYER + 0.02 //just above mobs
+	layer = MOB_LAYER + 0.51 //just above mobs
 	anchored = TRUE
 	climbable = TRUE
 

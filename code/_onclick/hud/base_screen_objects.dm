@@ -80,7 +80,8 @@
 
 /obj/screen/grab/Click()
 	var/obj/item/weapon/grab/G = master
-	G.s_click(src)
+	if (G)
+		G.s_click(src)
 	return TRUE
 
 /obj/screen/grab/attack_hand()
@@ -943,7 +944,7 @@ obj/screen/tactic
 	switch (parentmob.a_intent)
 		if (I_HELP)
 			icon_state = "help"
-		if (I_HURT)
+		if (I_HARM)
 			icon_state = "harm"
 		if (I_GRAB)
 			icon_state = "grab"
@@ -1002,7 +1003,7 @@ obj/screen/tactic
 	icon_state = "intent_harm"
 
 /obj/screen/fastintent/harm/Click()
-	parentmob.a_intent_change(I_HURT)
+	parentmob.a_intent_change(I_HARM)
 //	..()
 
 /obj/screen/fastintent/grab

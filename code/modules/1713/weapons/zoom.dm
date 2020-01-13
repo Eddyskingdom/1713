@@ -15,6 +15,10 @@ Parts of code courtesy of Super3222
 	slot_flags = SLOT_POCKET|SLOT_BELT
 	value = 15
 
+/obj/item/weapon/attachment/scope/Destroy()
+	azoom = null
+	..()
+
 /obj/item/weapon/attachment/scope/New()
 	..()
 	build_zooming()
@@ -163,7 +167,7 @@ Parts of code courtesy of Super3222
 		return FALSE
 	if (!istype(src, /obj/item/weapon/attachment/scope/adjustable/binoculars/periscope))
 		for (var/obj/structure/vehicleparts/frame/FR in user.loc)
-			if (FR.axis)
+			if (FR.axis && !istype(FR, /obj/structure/vehicleparts/frame/ship))
 				user << "You can't use \the [src] while inside a vehicle!"
 				return FALSE
 	if (H.wear_mask && istype(H.wear_mask, /obj/item/clothing/mask))
@@ -282,7 +286,7 @@ Parts of code courtesy of Super3222
 			for (var/obj/screen/movable/action_button/AB in user.client.screen)
 				if (AB.name == "Toggle Sights" && AB != azoom.button && azoom.button.screen_loc)
 					AB.invisibility = 101
-					if (azoom && azoom.button && findtext(azoom.button.screen_loc,":"))
+					if (azoom && azoom.button && findtext(azoom.button.screen_loc,":") && splittext(azoom.button.screen_loc, ":").len>=1 && splittext(splittext(azoom.button.screen_loc, ":")[1], "+").len>=2)
 						var/azoom_button_screenX = text2num(splittext(splittext(azoom.button.screen_loc, ":")[1], "+")[2])
 						var/AB_screenX = text2num(splittext(splittext(AB.screen_loc, ":")[1], "+")[2])
 

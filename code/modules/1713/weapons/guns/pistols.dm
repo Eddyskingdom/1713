@@ -238,6 +238,47 @@
 		icon_state = "borchardt0"
 	return
 
+/obj/item/weapon/gun/projectile/pistol/colthammerless
+	name = "Colt Hammerless"
+	desc = "A Colt pistol which does indeed have a hammer, Just hidden."
+	icon_state = "coltpockethammerless"
+	w_class = 2
+	caliber = "a32acp"
+	fire_sound = 'sound/weapons/guns/fire/pistol_fire.ogg'
+	magazine_type = /obj/item/ammo_magazine/colthammerless
+	weight = 0.794
+	ammo_type = /obj/item/ammo_casing/a32acp
+	load_method = MAGAZINE
+	handle_casings = EJECT_CASINGS
+	effectiveness_mod = 0.9
+/obj/item/weapon/gun/projectile/pistol/colthammerless/update_icon()
+	..()
+	if (ammo_magazine)
+		icon_state = "coltpockethammerless"
+	else
+		icon_state = "coltpockethammerless_open"
+	return
+
+/obj/item/weapon/gun/projectile/pistol/bergmann
+	name = "Bergmann no.2"
+	desc = "A semi automatic pistol made in 1896."
+	icon_state = "bergmann"
+	w_class = 2
+	caliber = "a9x19"
+	fire_sound = 'sound/weapons/guns/fire/pistol_fire.ogg'
+	magazine_type = /obj/item/ammo_magazine/bergmann
+	weight = 0.794
+	ammo_type = /obj/item/ammo_casing/a9x19
+	load_method = MAGAZINE
+	handle_casings = EJECT_CASINGS
+	effectiveness_mod = 0.9
+/obj/item/weapon/gun/projectile/pistol/bergmann/update_icon()
+	..()
+	if (ammo_magazine)
+		icon_state = "bergmann"
+	else
+		icon_state = "bergmann"
+	return
 
 /obj/item/weapon/gun/projectile/pistol/m1911
 	name = "Colt M1911"

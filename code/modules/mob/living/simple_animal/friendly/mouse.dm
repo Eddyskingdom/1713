@@ -30,11 +30,15 @@
 //	holder_type = /obj/item/weapon/holder/mouse
 	mob_size = MOB_MINISCULE
 	possession_candidate = TRUE
+	var/plaguemouse = FALSE
 
 	can_pull_size = TRUE
 	can_pull_mobs = MOB_PULL_NONE
 	granivore = 1
 	scavenger = 1
+	behaviour = "defends"
+	melee_damage_lower = 2
+	melee_damage_upper = 5
 
 /mob/living/simple_animal/mouse/New()
 	..()
@@ -46,6 +50,21 @@
 	icon_living = "mouse_[body_color]"
 	icon_dead = "mouse_[body_color]_dead"
 	desc = "It's a small [body_color] rodent, often seen hiding in the ship's hull and making a nuisance of itself."
+
+	if(body_color == "black")
+		if(map.ordinal_age == 2 || map.ordinal_age == 3) //Approx epochs where black plague was a thing.
+			if(prob(50))
+				plaguemouse = TRUE
+		else
+			if(prob(25))
+				plaguemouse = TRUE
+	else
+		if(map.ordinal_age == 2 || map.ordinal_age == 3) //Approx epochs where black plague was a thing.
+			if(prob(10))
+				plaguemouse = TRUE
+		else
+			if(prob(5))
+				plaguemouse = TRUE
 
 /mob/living/simple_animal/mouse/proc/splat()
 	health = FALSE
@@ -67,9 +86,24 @@
 /mob/living/simple_animal/mouse/Crossed(AM as mob|obj)
 	if ( ishuman(AM) )
 		if (!stat)
-			var/mob/M = AM
+			var/mob/living/carbon/human/M = AM
 			M << "<span class = 'notice'>\icon[src] Squeek!</span>"
 			M << 'sound/effects/mousesqueek.ogg'
+			target_mob = M
+			stance = HOSTILE_STANCE_ATTACK
+			stance_step = 6
+			if(plaguemouse && prob(2))
+				M.disease = TRUE
+				M.disease_type = "plague"
+			else if((plaguemouse && prob(0.03)) && (map.ordinal_age == 2 || map.ordinal_age == 3)) //2 percent chance because of if-else logic,
+				M.disease = TRUE
+				M.disease_type = "plague"
+			else if(plaguemouse && body_color == "black" && prob(4)) //prob is 3 percent.
+				M.disease = TRUE
+				M.disease_type = "plague"
+			else if((plaguemouse && body_color == "black" && prob(5)) && (map.ordinal_age == 2 || map.ordinal_age == 3)) //four percent chance kinda
+				M.disease = TRUE
+				M.disease_type = "plague"
 	..()
 
 /mob/living/simple_animal/mouse/death()
@@ -88,11 +122,40 @@
 			var/obj/item/weapon/reagent_containers/food/snacks/meat/human/meat = new/obj/item/weapon/reagent_containers/food/snacks/meat/human(get_turf(src))
 			meat.name = "[name] meatsteak"
 			meat.radiation = radiation/2
+			if(plaguemouse)
+				meat.reagents.add_reagent("plague", 3)
 			if (istype(user, /mob/living/carbon/human))
 				var/mob/living/carbon/human/HM = user
 				HM.adaptStat("medical", 0.3)
 			qdel(src)
 
+/mob/living/simple_animal/mouse/AttackingTarget()
+	if (!Adjacent(target_mob))
+		return
+	playsound(src.loc, 'sound/weapons/bite.ogg', 100, TRUE, 2)
+	custom_emote(1, "bites [target_mob]!")
+
+	var/damage = pick(melee_damage_lower,melee_damage_upper)
+
+	if (ishuman(target_mob))
+		var/mob/living/carbon/human/H = target_mob
+		var/dam_zone = pick("chest", "l_hand", "r_hand", "l_leg", "r_leg")
+		var/obj/item/organ/external/affecting = H.get_organ(ran_zone(dam_zone))
+		H.apply_damage(damage, BRUTE, affecting, H.run_armor_check(affecting, "melee"), sharp=1, edge=1)
+		if (prob(3))
+			H.disease = TRUE
+			H.disease_type = "plague"
+	else if (isliving(target_mob))
+		var/mob/living/L = target_mob
+		L.adjustBruteLoss(damage)
+		if (istype(target_mob, /mob/living/simple_animal))
+			var/mob/living/simple_animal/SA = target_mob
+			if (SA.behaviour == "defends" || SA.behaviour == "hunt")
+				if (SA.stance != HOSTILE_STANCE_ATTACK && SA.stance != HOSTILE_STANCE_ATTACKING)
+					SA.stance = HOSTILE_STANCE_ATTACK
+					SA.stance_step = 7
+					SA.target_mob = src
+		return L
 /*
  * Mouse types
  */
@@ -113,6 +176,9 @@
 	body_color = "black"
 	icon_state = "mouse_black"
 
+/mob/living/simple_animal/mouse/black/plague
+	plaguemouse = TRUE
+
 //TOM IS ALIVE! SQUEEEEEEEE~K :)
 /mob/living/simple_animal/mouse/brown/Tom
 	name = "Tom"
@@ -125,3 +191,18 @@
 
 /mob/living/simple_animal/mouse/cannot_use_vents()
 	return
+
+//Here temporarally until animals act as reagent containers.
+/obj/item/weapon/reagent_containers/food/snacks/attack_generic(var/mob/living/user)
+	/*
+	..()
+	if(istype(user, /mob/living/simple_animal/mouse))
+		var/mob/living/simple_animal/mouse/PM = src
+		if(istype(src, /obj/item/weapon/reagent_containers/food/snacks))
+			var/obj/item/weapon/reagent_containers/food/snacks/S = src
+			if(PM.plaguemouse)
+				S.reagents.add_reagent("plague", 0.05)
+		else if(istype(src, /mob/living/carbon/human))
+			var/mob/living/carbon/human/M = src
+			if(PM.plaguemouse)
+				M.reagents.add_reagent("plague", 0.05)*/

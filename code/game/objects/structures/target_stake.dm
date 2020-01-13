@@ -9,11 +9,23 @@
 	var/health = 100
 	not_movable = FALSE
 	not_disassemblable = FALSE
+
+/obj/structure/target_practice/indestructible
+
+/obj/structure/target_practice/indestructible/check_health()
+	return
+
+/obj/structure/target_practice/indestructible/ex_act()
+	return
 /obj/structure/target_practice/attackby(obj/item/W as obj, mob/living/carbon/human/user as mob)
 
 	if (istype(W, /obj/item/weapon/material))
 		user.setClickCooldown(W.cooldownw)
-		visible_message("<span class='notice'>[user] [pick(W.attack_verb)] the training dummy with the [W]!</span>","<span class='notice'>You have [W.attack_verb] the training dummy with the [W]!</span>")
+		if (W.attack_verb.len)
+			visible_message("<span class='notice'>[user] [pick(W.attack_verb)] the training dummy with the [W]!</span>","<span class='notice'>You have [pick(W.attack_verb)] the training dummy with the [W]!</span>")
+		else
+			visible_message("<span class='notice'>[user] hit the training dummy with the [W]!</span>","<span class='notice'>You have hit the training dummy with the [W]!</span>")
+
 		playsound(get_turf(src), W.hitsound, 100)
 		user.do_attack_animation(src)
 		health -= 5
@@ -29,7 +41,7 @@
 	else
 		..()
 /obj/structure/target_practice/attack_hand(mob/living/carbon/human/user as mob)
-	if (user.a_intent == I_HURT)
+	if (user.a_intent == I_HARM)
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		if (prob(67))
 			visible_message("<span class='notice'>[user] punches the training dummy!</span>","<span class='notice'>You punch the training dummy!</span>")

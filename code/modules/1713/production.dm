@@ -122,19 +122,22 @@
 /obj/structure/dehydrator/proc/dry_obj(var/obj_type = null)
 	spawn(1200) //2 minutes
 		if (obj_type == /obj/item/weapon/reagent_containers/food/snacks/rawcutlet)
-			new/obj/item/weapon/reagent_containers/food/snacks/driedmeat(src.loc)
+			if (isturf(src.loc))
+				new/obj/item/weapon/reagent_containers/food/snacks/driedmeat(src.loc)
 			visible_message("The meat finishes drying.")
 			filled -= 1
 			icon_state = "wood_drier[filled]"
 			return
 		else if (obj_type == /obj/item/weapon/reagent_containers/food/snacks/fishfillet)
-			new/obj/item/weapon/reagent_containers/food/snacks/driedfish(src.loc)
+			if (isturf(src.loc))
+				new/obj/item/weapon/reagent_containers/food/snacks/driedfish(src.loc)
 			visible_message("The fish finishes drying.")
 			filled -= 1
 			icon_state = "wood_drier[filled]"
 			return
 		else if (obj_type == /obj/item/weapon/reagent_containers/food/snacks/driedsalmon)
-			new/obj/item/weapon/reagent_containers/food/snacks/driedsalmon(src.loc)
+			if (isturf(src.loc))
+				new/obj/item/weapon/reagent_containers/food/snacks/driedsalmon(src.loc)
 			visible_message("The salmon finishes drying.")
 			filled -= 1
 			icon_state = "wood_drier[filled]"
@@ -274,6 +277,7 @@
 	can_hold = list(
 		/obj/item/stack/ore,
 		/obj/item/stack/material/stone,
+		/obj/item/stack/material/sandstone,
 		)
 	flammable = TRUE
 
@@ -315,6 +319,21 @@
 				user << "You collect the stone."
 
 
+/////////PRODUCE BASKET (PRODUCE COLLECTOR)////////////
+/obj/item/weapon/storage/produce_basket
+	name = "produce basket"
+	icon = 'icons/obj/storage.dmi'
+	desc = "A woven basket, used to collect fruits and vegitables."
+	icon_state = "produce_basket"
+	item_state = "produce_basket"
+	var/active = FALSE
+	w_class = 4
+	max_w_class = 3
+	max_storage_space = 30 //lots of fruits and veggies
+	can_hold = list(
+		/obj/item/weapon/reagent_containers/food/snacks/grown,
+		)
+	flammable = TRUE
 
 ////////////////////OIL/WELL///////////////////////////
 /obj/structure/oilwell

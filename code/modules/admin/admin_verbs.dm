@@ -11,7 +11,6 @@ var/list/admin_verbs_default = list(
 	/client/proc/see_soldiers,
 	/client/proc/see_world_realtime,
 	/client/proc/see_processes,
-	/client/proc/giveruntimelog,		//allows us to give access to runtime logs to somebody,
 	/client/proc/getserverlog,			//allows us to fetch server logs (diary) for other days,
 	/client/proc/getruntimelog                     // allows us to access runtime logs to somebody,
 	)
@@ -43,7 +42,6 @@ var/list/admin_verbs_admin = list(
 	/client/proc/player_memo,
 	/client/proc/dsay,					//talk in deadchat using our ckey/fakekey,
 	/client/proc/investigate_show,		//various admintools for investigation. Such as a singulo grief-log,
-	/client/proc/secrets,
 	/datum/admins/proc/toggleooc,		//toggles ooc on/off for everyone,
 	/datum/admins/proc/togglelooc,		//toggles looc on/off for everyone,
 	/datum/admins/proc/toggleoocdead,	//toggles ooc on/off for everyone who is dead,
@@ -112,7 +110,6 @@ var/list/admin_verbs_fun = list(
 	/client/proc/nuke,
 	/client/proc/make_sound,
 	/client/proc/editappear,
-	/client/proc/randomize_lobby_music,
 	/client/proc/show_custom_roundstart_tip,
 	/client/proc/reset_custom_roundstart_tip
 	)
@@ -138,16 +135,25 @@ var/list/admin_verbs_server = list(
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
 	/datum/admins/proc/adjump,
-	/datum/admins/proc/export,
+	/datum/admins/proc/export_savegame,
+	/datum/admins/proc/import_savegame,
+	/datum/admins/proc/persistent,
 	/client/proc/nanomapgen_DumpImage
 	)
 var/list/admin_verbs_debug = list(
 	/client/proc/cmd_admin_list_open_jobs,
 	/client/proc/Debug2,
+	/client/proc/toggle_gc_helper,
+	/client/proc/run_gc_helper,
+	/client/proc/check_null_atoms,
 	/client/proc/debug_controller,
 	/client/proc/cmd_admin_delete,
 	/client/proc/cmd_debug_del_all,
 	/client/proc/reload_admins,
+	/client/proc/reload_craft_list,
+	/client/proc/reload_bans,
+	/client/proc/purge_all_destroyed_objects,
+//	/client/proc/start_forcelife,
 	/client/proc/restart_controller,
 	/client/proc/callproc,
 	/client/proc/callproc_target,
@@ -453,15 +459,6 @@ var/list/admin_verbs_host = list(
 	set category = "Admin"
 	if (holder)
 		holder.game_panel()
-
-	return
-
-/client/proc/secrets()
-	set name = "Secrets"
-	set category = "Admin"
-	if (holder)
-		holder.Secrets()
-
 	return
 
 /client/proc/colorooc()
@@ -925,3 +922,80 @@ var/global/list/global_colour_matrix = null
 		nuke_map(epicenter, 200, 180, 0)
 		message_admins("[key] nuked the map at ([epicenter.x],[epicenter.y],[epicenter.z]) in area [epicenter.loc.name].")
 		log_game("[key] nuked the map at ([epicenter.x],[epicenter.y],[epicenter.z]) in area [epicenter.loc.name].")
+
+
+///////////////////////GC STUFF////////////////////////////////
+
+var/global/gc_helper_on = FALSE
+
+/proc/start_gc_helper()
+	spawn(18000)
+		if (gc_helper_on)
+			gc_helper()
+		start_gc_helper()
+
+/proc/check_null_atoms_proc()
+	if (fexists("nullobj.txt"))
+		fdel("nullobj.txt")
+	var/list/tmplist = list()
+	for(var/obj/AM)
+		if (AM.loc==null)
+			if (istype(AM, /obj/covers) || istype(AM, /obj/item) || istype(AM, /obj/structure) || istype(AM, /obj/roof))
+				tmplist += AM
+	for(var/mob/living/AL)
+		if (AL.loc==null)
+			tmplist += AL
+	for(var/atom/movable/M in tmplist)
+		text2file("[M.type]","nullobj.txt")
+	return tmplist
+
+/proc/gc_helper(var/list/origin = list())
+	world.log << "Garbage Helper running..."
+	var/numb = 0
+	if (isemptylist(origin))
+		for(var/obj/AM)
+			if (AM.loc==null)
+				if (istype(AM, /obj/covers) || istype(AM, /obj/item) || istype(AM, /obj/structure) || istype(AM, /obj/roof))
+					del(AM)
+					numb++
+		for(var/mob/living/AL)
+			if (AL.loc==null)
+				del(AL)
+				numb++
+	else
+		for(var/atom/movable/M in origin)
+			del(M)
+			numb++
+	world.log << "Garbage Helper done. Deleted [numb] atoms."
+	return
+
+/client/proc/toggle_gc_helper()
+	set category = "Debug"
+	set name = "Toggle GC Helper"
+	if (!check_rights(R_DEBUG))	return
+
+	message_admins("[key_name(src)] toggled the GC helper [gc_helper_on ? "OFF" : "ON"].")
+	log_admin("[key_name(src)] toggled the GC helper [gc_helper_on ? "OFF" : "ON"].")
+	gc_helper_on = !gc_helper_on
+	if (gc_helper_on)
+		gc_helper()
+		start_gc_helper()
+
+/client/proc/run_gc_helper()
+	set category = "Debug"
+	set name = "Run GC Helper"
+	if (!check_rights(R_DEBUG))	return
+
+	gc_helper()
+
+/client/proc/check_null_atoms()
+	set category = "Debug"
+	set name = "Check null Atoms"
+	if (!check_rights(R_DEBUG))	return
+
+	var/list/result = check_null_atoms_proc()
+	var/resp = WWinput(src, "Found [result.len] deletable atoms at null. Remove them?", "Atoms at null", "No", list("Yes","No"))
+	if (resp == "No")
+		return
+	else
+		gc_helper(result)

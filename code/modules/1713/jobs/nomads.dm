@@ -40,10 +40,12 @@
 		else if (map.ordinal_age == 1)
 			equip_to_slot_or_del(new /obj/item/clothing/under/celtic_short_braccae(src), slot_w_uniform)
 			equip_to_slot_or_del(new /obj/item/clothing/shoes/roman(src), slot_shoes)
+			equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 
 		else if (map.ordinal_age == 2)
 			if (map && map.ID == MAP_CIVILIZATIONS)
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/medieval(src), slot_shoes)
+				equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 				spawn(5)
 					if (gender == "male")
 						if (civilization == "West Kingdom")
@@ -92,6 +94,7 @@
 				equip_to_slot_or_del(new /obj/item/clothing/under/medieval/leather(src), slot_w_uniform)
 		else if (map.ordinal_age == 3)
 			equip_to_slot_or_del(new /obj/item/clothing/shoes/leatherboots1(src), slot_shoes)
+			equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 			if (map.ID == MAP_CIVILIZATIONS)
 				spawn(5)
 					make_nomad()
@@ -114,6 +117,7 @@
 					equip_to_slot_or_del(new /obj/item/clothing/under/civf1(src), slot_w_uniform)
 					equip_to_slot_or_del(new /obj/item/clothing/head/kerchief(src), slot_head)
 		else if (map.ordinal_age == 4)
+			equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 			if (gender == "male")
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/leatherboots1(src), slot_shoes)
 				equip_to_slot_or_del(new /obj/item/clothing/under/industrial3(src), slot_w_uniform)
@@ -122,6 +126,7 @@
 				equip_to_slot_or_del(new /obj/item/clothing/head/kerchief(src), slot_head)
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(src), slot_shoes)
 		else if (map.ordinal_age == 5)
+			equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 			if (gender == "male")
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/leatherboots1(src), slot_shoes)
 				equip_to_slot_or_del(new /obj/item/clothing/under/modern4(src), slot_w_uniform)
@@ -129,6 +134,7 @@
 				equip_to_slot_or_del(new /obj/item/clothing/under/civf1(src), slot_w_uniform)
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(src), slot_shoes)
 		else if (map.ordinal_age == 6)
+			equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 			if (gender == "male")
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/leatherboots1(src), slot_shoes)
 				equip_to_slot_or_del(new /obj/item/clothing/under/modern4(src), slot_w_uniform)
@@ -136,6 +142,7 @@
 				equip_to_slot_or_del(new /obj/item/clothing/under/civf1(src), slot_w_uniform)
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(src), slot_shoes)
 		else if (map.ordinal_age == 7)
+			equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 			if (gender == "male")
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/leatherboots1(src), slot_shoes)
 				equip_to_slot_or_del(new /obj/item/clothing/under/modern4(src), slot_w_uniform)
@@ -143,6 +150,7 @@
 				equip_to_slot_or_del(new /obj/item/clothing/under/civf1(src), slot_w_uniform)
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(src), slot_shoes)
 		else if (map.ordinal_age == 8)
+			equip_to_slot_or_del(new /obj/item/stack/money/coppercoin/twohundred(src), slot_r_store)
 			if (gender == "male")
 				equip_to_slot_or_del(new /obj/item/clothing/shoes/leatherboots1(src), slot_shoes)
 				equip_to_slot_or_del(new /obj/item/clothing/under/modern7(src), slot_w_uniform)
@@ -171,98 +179,54 @@
 				var/area/mob_area = get_area(src)
 				switch (mob_area.climate)
 					if ("tundra")
-						if (x<100)
-							add_language("Russian",TRUE)
-							remove_language("English")
-							for (var/datum/language/russian/A in languages)
-								default_language = A
-							name = species.get_random_russian_name(gender)
-							real_name = name
-							return
-						else
-							add_language("Ukrainian",TRUE)
-							remove_language("English")
-							for (var/datum/language/ukrainian/A in languages)
-								default_language = A
-							name = species.get_random_ukrainian_name(gender)
-							real_name = name
-							return
+						add_language("Russian",TRUE)
+						remove_language("English")
+						for (var/datum/language/russian/A in languages)
+							default_language = A
+						name = species.get_random_russian_name(gender)
+						real_name = name
+						add_note("Known Languages", "Russian")
+						return
+
 					if ("sea")
-						if (x<100)
-							add_language("Spanish",TRUE)
-							remove_language("English")
-							for (var/datum/language/spanish/A in languages)
-								default_language = A
-							name = species.get_random_spanish_name(gender)
-							real_name = name
-							add_note("Known Languages", "Spanish")
-							return
-						else
-							add_language("French",TRUE)
-							remove_language("English")
-							for (var/datum/language/french/A in languages)
-								default_language = A
-							name = species.get_random_french_name(gender)
-							real_name = name
-							add_note("Known Languages", "French")
-							return
+						add_language("Spanish",TRUE)
+						remove_language("English")
+						for (var/datum/language/spanish/A in languages)
+							default_language = A
+						name = species.get_random_spanish_name(gender)
+						real_name = name
+						add_note("Known Languages", "Spanish")
+						return
+
 					if ("jungle")
-						if (x<100)
-							add_language("Swahili",TRUE)
-							remove_language("English")
-							for (var/datum/language/swahili/A in languages)
-								default_language = A
-							name = species.get_random_swahili_name(gender)
-							real_name = name
-							add_note("Known Languages", "Swahili")
-							return
-						else
-							add_language("Zulu",TRUE)
-							remove_language("English")
-							for (var/datum/language/zulu/A in languages)
-								default_language = A
-							name = species.get_random_zulu_name(gender)
-							real_name = name
-							add_note("Known Languages", "Zulu")
-							return
+						add_language("Japanese",TRUE)
+						remove_language("English")
+						for (var/datum/language/japanese/A in languages)
+							default_language = A
+						name = species.get_random_japanese_name(gender)
+						real_name = name
+						add_note("Known Languages", "Japanese")
+						return
+
 					if ("desert")
-						if (x<100)
-							add_language("Arabic",TRUE)
-							remove_language("English")
-							for (var/datum/language/arab/A in languages)
-								default_language = A
-							name = species.get_random_arab_name(gender)
-							real_name = name
-							add_note("Known Languages", "Arabic")
-							return
-						else
-							add_language("Hebrew",TRUE)
-							remove_language("English")
-							for (var/datum/language/hebrew/A in languages)
-								default_language = A
-							name = species.get_random_hebrew_name(gender)
-							real_name = name
-							add_note("Known Languages", "Hebrew")
-							return
+						add_language("Arabic",TRUE)
+						remove_language("English")
+						for (var/datum/language/arab/A in languages)
+							default_language = A
+						name = species.get_random_arab_name(gender)
+						real_name = name
+						add_note("Known Languages", "Arabic")
+						return
+
 					if ("temperate")
-						if (x<100)
-							add_language("Dutch",TRUE)
-							remove_language("English")
-							for (var/datum/language/dutch/A in languages)
-								default_language = A
-							name = species.get_random_dutch_name(gender)
-							real_name = name
-							add_note("Known Languages", "Dutch")
-							return
-						else
-							add_language("German",TRUE)
-							remove_language("English")
-							for (var/datum/language/german/A in languages)
-								default_language = A
-							name = species.get_random_german_name(gender)
-							real_name = name
-							add_note("Known Languages", "German")
-							return
+						add_language("Spanish",TRUE)
+						remove_language("English")
+						for (var/datum/language/spanish/A in languages)
+							default_language = A
+						name = species.get_random_spanish_name(gender)
+						real_name = name
+						add_note("Known Languages", "Spanish")
+						return
 
 		else if (map.ID == MAP_NOMADS_PANGEA)
 			spawn(5)
@@ -285,22 +249,32 @@
 						real_name = name
 						return
 					if ("semiarid")
-						add_language("Latin",TRUE)
-						remove_language("English")
-						for (var/datum/language/latin/A in languages)
-							default_language = A
-						name = species.get_random_roman_name(gender)
-						real_name = name
-						add_note("Known Languages", "Latin")
-						return
+						if (prob(50))
+							add_language("Latin",TRUE)
+							remove_language("English")
+							for (var/datum/language/latin/A in languages)
+								default_language = A
+							name = species.get_random_roman_name(gender)
+							real_name = name
+							add_note("Known Languages", "Latin")
+							return
+						else
+							add_language("Arabic",TRUE)
+							remove_language("English")
+							for (var/datum/language/arab/A in languages)
+								default_language = A
+							name = species.get_random_arab_name(gender)
+							real_name = name
+							add_note("Known Languages", "Arabic")
+							return
 					if ("savanna")
-						add_language("Swahili",TRUE)
+						add_language("Japanese",TRUE)
 						remove_language("English")
-						for (var/datum/language/swahili/A in languages)
+						for (var/datum/language/japanese/A in languages)
 							default_language = A
-						name = species.get_random_swahili_name(gender)
+						name = species.get_random_japanese_name(gender)
 						real_name = name
-						add_note("Known Languages", "Swahili")
+						add_note("Known Languages", "Japanese")
 						return
 					if ("jungle")
 						add_language("Japanese",TRUE)
@@ -321,80 +295,59 @@
 						add_note("Known Languages", "Arabic")
 						return
 					if ("temperate")
-						add_language("German",TRUE)
+						add_language("Latin",TRUE)
 						remove_language("English")
-						for (var/datum/language/german/A in languages)
+						for (var/datum/language/latin/A in languages)
 							default_language = A
-						name = species.get_random_german_name(gender)
+						name = species.get_random_roman_name(gender)
 						real_name = name
-						add_note("Known Languages", "German")
+						add_note("Known Languages", "Latin")
 						return
-/*
-		else if (map.ID == MAP_NOMADS_PANGEA)
+		else if (map.ID == MAP_NOMADS_MEDITERRANEAN)
 			spawn(5)
-				var/area/mob_area = get_area(src)
-				switch (mob_area.climate)
-					if ("tundra")
-						add_language("Russian",TRUE)
+				//SOUTH
+				if (y<100)
+					//SOUTH-WEST
+					if (x<100)
+						add_language("Arabic",TRUE)
 						remove_language("English")
-						for (var/datum/language/russian/A in languages)
+						for (var/datum/language/arab/A in languages)
 							default_language = A
-						name = species.get_random_russian_name(gender)
+						name = species.get_random_arab_name(gender)
 						real_name = name
+						add_note("Known Languages", "Arabic")
 						return
-					if ("taiga")
-						add_language("Russian",TRUE)
+					//SOUTH-EAST
+					else
+						add_language("Hebrew",TRUE)
 						remove_language("English")
-						for (var/datum/language/russian/A in languages)
+						for (var/datum/language/hebrew/A in languages)
 							default_language = A
-						name = species.get_random_russian_name(gender)
+						name = species.get_random_hebrew_name(gender)
 						real_name = name
+						add_note("Known Languages", "Hebrew")
 						return
-					if ("semiarid")
-						add_language("Dutch",TRUE)
+					//NORTH-WEST
+				else
+					if (x<100)
+						add_language("Latin",TRUE)
 						remove_language("English")
-						for (var/datum/language/dutch/A in languages)
+						for (var/datum/language/latin/A in languages)
 							default_language = A
-						name = species.get_random_dutch_name(gender)
+						name = species.get_random_roman_name(gender)
 						real_name = name
-						add_note("Known Languages", "Dutch")
+						add_note("Known Languages", "Latin")
 						return
-					if ("savanna")
-						add_language("Chinese",TRUE)
+					//NORTH-EAST
+					else
+						add_language("Greek",TRUE)
 						remove_language("English")
-						for (var/datum/language/chinese/A in languages)
+						for (var/datum/language/greek/A in languages)
 							default_language = A
-						name = species.get_random_chinese_name(gender)
+						name = species.get_random_greek_name(gender)
 						real_name = name
-						add_note("Known Languages", "Chinese")
+						add_note("Known Languages", "Greek")
 						return
-					if ("jungle")
-						add_language("Chinese",TRUE)
-						remove_language("English")
-						for (var/datum/language/chinese/A in languages)
-							default_language = A
-						name = species.get_random_chinese_name(gender)
-						real_name = name
-						add_note("Known Languages", "Chinese")
-						return
-					if ("desert")
-						add_language("Dutch",TRUE)
-						remove_language("English")
-						for (var/datum/language/dutch/A in languages)
-							default_language = A
-						name = species.get_random_dutch_name(gender)
-						real_name = name
-						add_note("Known Languages", "Dutch")
-						return
-					if ("temperate")
-						add_language("Russian",TRUE)
-						remove_language("English")
-						for (var/datum/language/russian/A in languages)
-							default_language = A
-						name = species.get_random_russian_name(gender)
-						real_name = name
-						return
-*/
 //////////////////////////////////////////////////////
 ///////////////////Karafuta-Sakhalinsk////////////////
 //////////////////////////////////////////////////////
@@ -754,7 +707,7 @@
 	if (!H)	return FALSE
 	H.give_clothes()
 	H.make_nomad()
-	H.give_languages()
+//	H.give_languages()
 
 	H.add_note("Role", "You are a <b>Nomad</b>. Form a tribe and survive!")
 

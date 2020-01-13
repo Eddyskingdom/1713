@@ -126,7 +126,7 @@
 /obj/item/weapon/reagent_containers/pill/opium
 	name = "opium ball"
 	desc = "A ball of dried opium. A great painkiller."
-	icon = 'icons/obj/items.dmi'
+	icon = 'icons/obj/materials.dmi'
 	icon_state = "opium_extracted"
 	value = 17
 	New()
@@ -254,3 +254,11 @@
 	New()
 		..()
 		reagents.add_reagent("ketamine", REAGENTS_OVERDOSE*0.45) // slightly less than an OD
+
+/obj/item/weapon/reagent_containers/pill/dragonpowder
+	name = "dragon powder pill"
+	desc = "A shiny purple pill."
+	icon_state = "dragonpowder"
+	New()
+		..()
+		reagents.add_reagent("dragon_powder", 10)

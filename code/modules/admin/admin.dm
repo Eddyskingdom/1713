@@ -252,18 +252,6 @@ proc/admin_notice(var/message, var/rights)
 
 	dat += "</body></html>"
 	usr << browse(dat, "window=adminplayerinfo;size=480x480")
-/*
-/datum/admins/proc/Jobbans()
-	if (!check_rights(R_MOD))	return
-
-	var/dat = "<b>Job Bans!</b><HR><table>"
-	for (var/t in jobban_keylist)
-		var/r = t
-		if ( findtext(r,"##") )
-			r = copytext( r, TRUE, findtext(r,"##") )//removes the description
-		dat += text("<tr><td>[t] (<A href='?src=\ref[src];removejobban=[r]'>unban</A>)</td></tr>")
-	dat += "</table>"
-	usr << browse(dat, "window=ban;size=400x400")*/
 
 /datum/admins/proc/game_panel()
 	if (!check_rights(R_ADMIN))	return
@@ -297,26 +285,6 @@ proc/admin_notice(var/message, var/rights)
 	usr << browse(dat, "window=admin2;size=400x500")
 	return
 
-/datum/admins/proc/Secrets()
-	if (!check_rights(0))	return
-
-	var/dat = "<b>The first rule of adminbuse is: you don't talk about the adminbuse.</b><HR>"
-	for (var/datum/admin_secret_category/category in admin_secrets.categories)
-		if (!category.can_view(usr))
-			continue
-		dat += "<b>[category.name]</b><br>"
-		if (category.desc)
-			dat += "<I>[category.desc]</I><BR>"
-		for (var/datum/admin_secret_item/item in category.items)
-			if (!item.can_view(usr))
-				continue
-			dat += "<A href='?src=\ref[src];admin_secrets=\ref[item]'>[item.name()]</A><BR>"
-		dat += "<BR>"
-	usr << browse(dat, "window=secrets")
-	return
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////admins2.dm merge
 //i.e. buttons/verbs
 
@@ -346,7 +314,7 @@ proc/admin_notice(var/message, var/rights)
 	set desc="Announce your desires to the world"
 	if (!check_rights(0))	return
 
-	var/message = russian_to_cp1251(input("Global message to send:", "Admin Announce", null, null))  as message
+	var/message = russian_to_cp1251(input("Global message to send:", "Admin Announce", null, null))
 	if (message)
 		if (!check_rights(R_SERVER,0))
 			message = sanitize(message, 500, extra = FALSE)
@@ -360,8 +328,8 @@ proc/admin_notice(var/message, var/rights)
 	set name = "IC Announcement"
 	set desc="Announce events"
 	if (!check_rights(0))	return
-	var/messaget = russian_to_cp1251(input("Message Title:", "IC Announcement", null, null))  as message
-	var/message = russian_to_cp1251(input("Global message to send:", "IC Announcement", null, null))  as message
+	var/messaget = russian_to_cp1251(input("Message Title:", "IC Announcement", null, null))
+	var/message = russian_to_cp1251(input("Global message to send:", "IC Announcement", null, null))
 	if (message)
 		if (!check_rights(R_SERVER,0))
 			message = sanitize(message, 500, extra = FALSE)
@@ -431,17 +399,6 @@ proc/admin_notice(var/message, var/rights)
 	config.dooc_allowed = !( config.dooc_allowed )
 	log_admin("[key_name(usr)] toggled Dead OOC.")
 	message_admins("[key_name_admin(usr)] toggled Dead OOC.", TRUE)
-
-
-
-/datum/admins/proc/toggletraitorscaling()
-	set category = "Server"
-	set desc="Toggle traitor scaling"
-	set name="Toggle Traitor Scaling"
-	config.traitor_scaling = !config.traitor_scaling
-	log_admin("[key_name(usr)] toggled Traitor Scaling to [config.traitor_scaling].")
-	message_admins("[key_name_admin(usr)] toggled Traitor Scaling [config.traitor_scaling ? "on" : "off"].", TRUE)
-
 
 /datum/admins/proc/startnow()
 	set category = "Server"
@@ -553,8 +510,8 @@ proc/admin_notice(var/message, var/rights)
 	set category = "Special"
 	set desc="Activates or Deactivates research."
 	set name="Toggle Research"
-	if (!map.civilizations || map.ID == MAP_TRIBES)
-		usr << "<font color='red'>Error: This is only available on Civ13 mode.</font>"
+	if ((!map.civilizations && !map.nomads) || map.ID == MAP_TRIBES)
+		usr << "<font color='red'>Error: This is only available on Civ/Nomads modes.</font>"
 		return
 	if (!(map.research_active))
 		map.research_active = TRUE
@@ -571,9 +528,8 @@ proc/admin_notice(var/message, var/rights)
 	set category = "Special"
 	set desc="Changes research speed in Auto-Research mode."
 	set name="Set Research Speed"
-	if (!map.civilizations || map.ID == MAP_TRIBES)
-		usr << "<font color='red'>Error: This is only available on Civ13 mode.</font>"
-		return
+	if (!map.civilizations && !map.nomads)
+		usr << "<font color='red'>Error: This is only available on Civ/Nomads modes.</font>"
 	if (!(map.autoresearch))
 		usr << "<font color='red'>Error: This is only available within the Auto-Research Gamemode.</font>"
 		return
@@ -592,16 +548,13 @@ proc/admin_notice(var/message, var/rights)
 
 /datum/admins/proc/set_custom_research()
 	set category = "Special"
-	set desc="Changes the starting research."
+	set desc="Changes the research."
 	set name="Set Custom Research"
-	if (!map.civilizations || map.ID == MAP_TRIBES)
-		usr << "<font color='red'>Error: This is only available on Civ13 mode.</font>"
-		return
-	else if (!(ticker.current_state == GAME_STATE_PREGAME))
-		usr << "<font color='red'>Error: The game as already started.</font>"
+	if (!map.civilizations && !map.nomads && map.ID != MAP_TRIBES)
+		usr << "<font color='red'>Error: This is only available on Civ/Nomads modes.</font>"
 		return
 	else
-		var/customresearch = input("What do you want the starting research to be?", "Custom Research") as num|null
+		var/customresearch = input("What do you want the research to be?", "Custom Research") as num|null
 		if (customresearch == null)
 			return
 		if (customresearch <= 0)
@@ -616,21 +569,18 @@ proc/admin_notice(var/message, var/rights)
 		map.civd_research = list(customresearch,customresearch,customresearch,null)
 		map.cive_research = list(customresearch,customresearch,customresearch,null)
 		map.civf_research = list(customresearch,customresearch,customresearch,null)
-		world << "<big>The initial research has been set to  <b>[customresearch]</b>.</big>"
-		log_admin("[key_name(usr)] set the initial research to [customresearch].")
+		world << "<big>The research has been set to  <b>[customresearch]</b>.</big>"
+		log_admin("[key_name(usr)] set the research to [customresearch].")
 		return
 /datum/admins/proc/set_custom_age()
 	set category = "Special"
 	set desc="Changes the starting age."
 	set name="Set Custom Age"
-	if (!map.civilizations || map.ID == MAP_TRIBES)
-		usr << "<font color='red'>Error: This is only available on Civ13 mode.</font>"
-		return
-	else if (!(ticker.current_state == GAME_STATE_PREGAME))
-		usr << "<font color='red'>Error: The game as already started.</font>"
+	if (!map.civilizations && !map.nomads && map.ID != MAP_TRIBES)
+		usr << "<font color='red'>Error: This is only available on Civ/Nomads modes.</font>"
 		return
 	else
-		var/customage = WWinput(src, "Choose the starting age:", "Starting Age", "5000 B.C.", list("5000 B.C.", "313 B.C.", "1013", "1713", "1873", "1903", "Cancel"))
+		var/customage = WWinput(src, "Choose the starting age:", "Starting Age", "5000 B.C.", list("5000 B.C.", "313 B.C.", "1013", "1713", "1873", "1903","1943","1969","2013", "Cancel"))
 		if (customage == "Cancel")
 			return
 		else if (customage == "5000 B.C.")
@@ -643,6 +593,7 @@ proc/admin_notice(var/message, var/rights)
 			map.ordinal_age = 1
 			map.age = "313 B.C."
 			map.age1_done = TRUE
+			map.default_research = 35
 			world << "<big>The Epoch has been changed to <b>[map.age]</b>.</big>"
 			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
 			return
@@ -651,6 +602,7 @@ proc/admin_notice(var/message, var/rights)
 			map.age = "1013"
 			map.age1_done = TRUE
 			map.age2_done = TRUE
+			map.default_research = 50
 			world << "<big>The Epoch has been changed to <b>[map.age]</b>.</big>"
 			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
 			return
@@ -660,6 +612,7 @@ proc/admin_notice(var/message, var/rights)
 			map.age1_done = TRUE
 			map.age2_done = TRUE
 			map.age3_done = TRUE
+			map.default_research = 90
 			world << "<big>The Epoch has been changed to <b>[map.age]</b></big>"
 			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
 			return
@@ -670,6 +623,7 @@ proc/admin_notice(var/message, var/rights)
 			map.age2_done = TRUE
 			map.age3_done = TRUE
 			map.age4_done = TRUE
+			map.default_research = 104
 			world << "<big>The Epoch has been changed to <b>[map.age]</b></big>"
 			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
 			return
@@ -681,6 +635,49 @@ proc/admin_notice(var/message, var/rights)
 			map.age3_done = TRUE
 			map.age4_done = TRUE
 			map.age5_done = TRUE
+			map.default_research = 135
+			world << "<big>The Epoch has been changed to <b>[map.age]</b></big>"
+			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
+			return
+		else if (customage == "1943")
+			map.ordinal_age = 6
+			map.age = "1943"
+			map.age1_done = TRUE
+			map.age2_done = TRUE
+			map.age3_done = TRUE
+			map.age4_done = TRUE
+			map.age5_done = TRUE
+			map.age6_done = TRUE
+			map.default_research = 152
+			world << "<big>The Epoch has been changed to <b>[map.age]</b></big>"
+			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
+			return
+		else if (customage == "1969")
+			map.ordinal_age = 7
+			map.age = "1969"
+			map.age1_done = TRUE
+			map.age2_done = TRUE
+			map.age3_done = TRUE
+			map.age4_done = TRUE
+			map.age5_done = TRUE
+			map.age6_done = TRUE
+			map.age7_done = TRUE
+			map.default_research = 185
+			world << "<big>The Epoch has been changed to <b>[map.age]</b></big>"
+			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
+			return
+		else if (customage == "2013")
+			map.ordinal_age = 8
+			map.age = "2013"
+			map.age1_done = TRUE
+			map.age2_done = TRUE
+			map.age3_done = TRUE
+			map.age4_done = TRUE
+			map.age5_done = TRUE
+			map.age6_done = TRUE
+			map.age7_done = TRUE
+			map.age8_done = TRUE
+			map.default_research = 230
 			world << "<big>The Epoch has been changed to <b>[map.age]</b></big>"
 			log_admin("[key_name(usr)] changed the map's epoch to [map.age].")
 			return
@@ -880,7 +877,7 @@ var/list/atom_types = null
 		M = whom
 		C = M.client
 	else
-		return "<b>(*not an mob*)</b>"
+		return "<b>(*not a mob*)</b>"
 	switch(detail)
 		if (0)
 			return "<b>[key_name(C, link, name, highlight_special)]</b>"
@@ -972,56 +969,53 @@ var/list/atom_types = null
 
 	if (!check_rights(R_SERVER))	return
 
-	message_admins("[key_name(usr)] manually reloaded admins")
+	message_admins("[key_name(usr)] manually reloaded admins.")
 	load_admins(1)
 
-////WORK IN PROGRESS - PERSISTENCE STUFF////
-/datum/admins/proc/export()
-	set category = "Server"
-	set desc="Export Variables"
-	set name="Export"
-	var/confirm = WWinput(usr, "Are you sure you want to save the world? SERVER MIGHT FREEZE FOR UP TO 2 MINUTES!", "Confirmation Required", "No", list("Yes", "No"))
-	if (confirm == "No")
-		return
+/client/proc/reload_bans()
+	set name = "Update Bans"
+	set category = "Debug"
+
+	if (!check_rights(R_SERVER))	return
+
+	message_admins("[key_name(usr)] manually reloaded bans.")
+	load_bans()
+
+/client/proc/start_forcelife()
+	set name = "Start Forcelife"
+	set category = "Debug"
+
+	if (!check_rights(R_SERVER))	return
+
+	message_admins("[key_name(usr)] manually set the Life() proc of living mobs.")
+	for(var/mob/living/L in world)
+		if (!L.life_forced)
+			L.forcelife()
+
+/client/proc/reload_craft_list()
+	set name = "Reload Crafting"
+	set category = "Debug"
+
+	if (!check_rights(R_SERVER))	return
+
+	message_admins("[key_name(usr)] manually reloaded crafting recipes.")
+	load_recipes()
+
+/proc/load_recipes()
+	var/F3 = file("config/material_recipes.txt")
+	if (fexists(F3))
+		var/list/craftlist_temp = file2list(F3,"\n")
+		craftlist_list = list()
+		for (var/i in craftlist_temp)
+			if (findtext(i, ",") && findtext(i,"RECIPE: "))
+				var/tmpi = replacetext(i, "RECIPE: ", "")
+				var/list/current = splittext(tmpi, ",")
+				craftlist_list += list(current)
+				if (current.len != 13)
+					world.log << "Error! Recipe [current[2]] has a length of [current.len] (should be 13)."
 	else
-		world << "<big>SAVING THE WORLD IN 10 SECONDS. GAME WILL FREEZE!</big>"
-		spawn(100)
-			world.log << "Exporting mobs..."
-			var/F = file("SQL/saves/mobs.txt")
-			if (fexists(F))
-				fdel(F)
-			for (var/mob/M in world)
-				var/txtexport = list2text_assoc(M)
-				text2file(txtexport,F)
-			world.log << "Finished exporting mobs to [F]."
-
-			world.log << "Exporting turfs..."
-			var/F1 = file("SQL/saves/turfs.txt")
-			if (fexists(F1))
-				fdel(F1)
-			for (var/turf/T in world)
-				text2file("[T.type];[T.loc];[T.x];[T.y];[T.z]",F1)
-			world.log << "Finished exporting turfs to [F1]."
-
-			world.log << "Exporting objs..."
-			var/F2 = file("SQL/saves/objs.txt")
-			if (fexists(F2))
-				fdel(F2)
-			for (var/obj/O in world)
-				var/txtexport = list2text_assoc(O)
-				text2file(txtexport,F2)
-			world.log << "Finished exporting objs to [F2]."
-
-			world.log << "Exporting areas..."
-			var/F3 = file("SQL/saves/areas.txt")
-			if (fexists(F3))
-				fdel(F3)
-			for (var/area/A in world)
-				text2file("[A.name];[A.type]",F3)
-			world.log << "Finished exporting areas to [F3]."
-			world << "<big>SAVING FINISHED SUCCESSFULLY</big>"
-			return
-
+		admin_notice("<span class='danger'>Failed to load crafting recipes!</span>", R_DEBUG)
+	world.log << "Finished loading recipes."
 /datum/admins/proc/toggle_ores()
 	set category = "Special"
 	set desc="Toggle ore spawners on and off"
@@ -1042,6 +1036,30 @@ var/list/atom_types = null
 				O.active = 1
 				O.do_spawn()
 			return
+
+/proc/load_bans()
+	var/removed = 0
+	var/kept = 0
+	var/checkingfile = "SQL/bans.txt"
+	if (fexists(checkingfile))
+		var/details = file2text(checkingfile)
+		var/list/details_lines = splittext(details, "|||\n")
+		if (details_lines.len)
+			for(var/i=1,i<=details_lines.len,i++)
+				if (findtext(details_lines[i], ";"))
+					var/list/details2 = splittext(details_lines[i], ";")
+					if (text2num(details2[7])<=world.realtime)
+						details_lines -= details_lines[i]
+						removed++
+		fdel(checkingfile)
+		if (details_lines.len)
+			for(var/L in details_lines)
+				if (L && L != "")
+					text2file("[L]|||", checkingfile)
+					kept++
+
+	world.log << "Finished cleaning ban list. [removed] bans removed, [kept] bans kept."
+	return TRUE
 
 //Radiation/Pollution stuff
 /datum/admins/proc/get_world_values()

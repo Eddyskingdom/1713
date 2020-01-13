@@ -1,4 +1,4 @@
-#define NO_WINNER "The battle is still going on."
+
 /obj/map_metadata/nanjing
 	ID = MAP_NANJING
 	title = "Nanjing (120x200x2)"
@@ -12,12 +12,12 @@
 	available_subfactions = list(
 		)
 	roundend_condition_sides = list(
-		list(CHINESE) = /area/caribbean/russian/land/inside/command,
 		list(JAPANESE) = /area/caribbean/japanese/land/inside/command,
+		list(CHINESE) = /area/caribbean/russian/land/inside/command,
 		)
 	age = "1939"
 	ordinal_age = 6
-	faction_distribution_coeffs = list(JAPANESE = 0.4, CHINESE = 0.6)
+	faction_distribution_coeffs = list(JAPANESE = 0.5, CHINESE = 0.5)
 	battle_name = "battle of Nanjing"
 	mission_start_message = "<font size=4>All factions have <b>8 minutes</b> to prepare before the ceasefire ends!<br>The Japanese will win if they capture the <b>Chinese command</b>. The Chinese will win if they manage to defend their command for <b>30 minutes!</b>.</font>"
 	faction1 = JAPANESE
@@ -61,7 +61,7 @@
 		if ("Japanese")
 			return "Japanese"
 		if ("Chinese")
-			return "People's Liberation Army"
+			return "Chinese"
 
 
 /obj/map_metadata/nanjing/cross_message(faction)
@@ -135,13 +135,12 @@ var/no_loop_n = FALSE
 				current_winner = roundend_condition_def2army(roundend_condition_sides[2][1])
 				current_loser = roundend_condition_def2army(roundend_condition_sides[1][1])
 	else
-		if (current_win_condition != NO_WINNER && current_winner && current_loser)
+		if (current_win_condition != no_winner && current_winner && current_loser)
 			world << "<font size = 3>The <b>Chinese</b> have recaptured the Nanjing Command!</font>"
 			current_winner = null
 			current_loser = null
 		next_win = -1
-		current_win_condition = NO_WINNER
+		current_win_condition = no_winner
 		win_condition.hash = 0
 	last_win_condition = win_condition.hash
 	return TRUE
-#undef NO_WINNER

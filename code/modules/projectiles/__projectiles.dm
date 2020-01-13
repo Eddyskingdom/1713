@@ -32,7 +32,6 @@
 	embed = FALSE
 	sharp = FALSE
 
-
 /obj/item/projectile/arrow/arrow
 	damage = DAMAGE_LOW-28
 	penetrating = 0
@@ -63,7 +62,13 @@
 	damage = DAMAGE_MEDIUM
 	penetrating = 0
 	armor_penetration = 2
-	icon_state = "arrow_copper"
+	icon_state = "arrow_stone"
+
+/obj/item/projectile/arrow/arrow/sandstone
+	damage = DAMAGE_MEDIUM
+	penetrating = 0
+	armor_penetration = 2
+	icon_state = "arrow_sandstone"
 
 /obj/item/projectile/arrow/arrow/copper
 	damage = DAMAGE_MEDIUM+1
@@ -102,17 +107,115 @@
 	icon_state = "arrow_vial"
 	volume = 15
 
+/obj/item/projectile/arrow/arrow/vial/poisonous
+	New()
+		..()
+		reagents.add_reagent("batrachotoxin",15)
+
+/obj/item/projectile/arrow/bolt/vial/poisonous
+	New()
+		..()
+		reagents.add_reagent("batrachotoxin",15)
 /obj/item/projectile/arrow/arrow/fire/on_impact(mob/living/carbon/M as mob)
 	if (prob(10))
 		M.fire_stacks += 1
-	M.IgniteMob()
+	if (M)
+		M.IgniteMob()
 	spawn (0.01)
 		qdel(src)
 	..()
 
-/obj/item/projectile/arrow/arrow/on_impact(mob/living/carbon/human/M as mob)
-	//TO DO TRANSFER REAGENTS REAGENTS HURT MY BRAIN
-	//src.reagents.trans_to(M, volume)
+//BOLTS
+/obj/item/projectile/arrow/bolt
+	damage = DAMAGE_LOW-20+5
+	penetrating = 1
+	armor_penetration = 6+10
+	icon_state = "bolt_iron"
+
+/obj/item/projectile/arrow/bolt/stone
+	damage = DAMAGE_MEDIUM+5
+	penetrating = 0
+	armor_penetration = 2+10
+	icon_state = "bolt_stone"
+
+/obj/item/projectile/arrow/bolt/sandstone
+	damage = DAMAGE_MEDIUM+5
+	penetrating = 0
+	armor_penetration = 2+10
+	icon_state = "bolt_sandstone"
+
+/obj/item/projectile/arrow/bolt/copper
+	damage = DAMAGE_MEDIUM+1+5
+	penetrating = 0
+	armor_penetration = 2+10
+	icon_state = "bolt_copper"
+
+/obj/item/projectile/arrow/bolt/iron
+	damage = DAMAGE_MEDIUM+5+5
+	penetrating = 1
+	armor_penetration = 6+10
+	icon_state = "bolt_iron"
+
+/obj/item/projectile/arrow/bolt/bronze
+	damage = DAMAGE_MEDIUM+8+5
+	penetrating = 1
+	armor_penetration = 8+10
+	icon_state = "bolt_bronze"
+
+/obj/item/projectile/arrow/bolt/steel
+	damage = DAMAGE_MEDIUM+11+5
+	penetrating = 1
+	armor_penetration = 10+10
+	icon_state = "bolt_steel"
+
+/obj/item/projectile/arrow/bolt/modern
+	damage = DAMAGE_MEDIUM+11+5
+	penetrating = 1
+	armor_penetration = 10+10
+	icon_state = "bolt_modern"
+
+/obj/item/projectile/arrow/bolt/fire
+	damage = DAMAGE_LOW+5
+	penetrating = 0
+	armor_penetration = 10+10
+	icon_state = "bolt"
+	damage_type = BURN
+	embed = FALSE
+	sharp = FALSE
+
+/obj/item/projectile/arrow/bolt/fire/gods
+	damage = DAMAGE_OH_GOD
+	penetrating = 100
+	armor_penetration = 1000
+	icon_state = "bolt_god"
+	damage_type = BURN
+	gibs = TRUE
+	crushes = TRUE
+
+/obj/item/projectile/arrow/bolt/fire/on_impact(mob/living/carbon/M as mob)
+	if (prob(10))
+		M.fire_stacks += 1
+	if (M)
+		M.IgniteMob()
+	spawn (0.01)
+		qdel(src)
+	..()
+
+/obj/item/projectile/arrow/bolt/vial
+	damage = DAMAGE_MEDIUM
+	penetrating = 1
+	armor_penetration = 10
+	icon_state = "bolt_vial"
+	volume = 15
+
+/obj/item/projectile/arrow/on_impact(var/atom/A as mob)
+	if (istype(src, /obj/item/projectile/arrow/bolt/vial) || istype(src, /obj/item/projectile/arrow/arrow/vial))
+		if (ishuman(A))
+			var/mob/living/carbon/human/H = A
+			reagents.trans_to_mob(H, volume, CHEM_BLOOD)
+		else
+			reagents.trans_to(A, volume)
+	..()
 
 /obj/item/projectile/grenade/smoke
 	name = "smoke grenade"
@@ -175,7 +278,7 @@
 	armor_penetration = 19
 
 /obj/item/projectile/bullet/rifle/a762x54
-	damage = DAMAGE_HIGH+1
+	damage = DAMAGE_HIGH+2
 	penetrating = 2
 	armor_penetration = 18
 
@@ -186,7 +289,7 @@
 	armor_penetration = 18
 
 /obj/item/projectile/bullet/pistol/a762x38
-	damage = DAMAGE_MEDIUM
+	damage = DAMAGE_MEDIUM+1
 	penetrating = 2
 	armor_penetration = 12
 
@@ -198,7 +301,22 @@
 /obj/item/projectile/bullet/pistol/a32
 	damage = DAMAGE_MEDIUM+1
 	penetrating = 1
+	armor_penetration = 5
+
+/obj/item/projectile/bullet/pistol/a32acp
+	damage = DAMAGE_MEDIUM+3
+	penetrating = 2
+	armor_penetration = 6
+
+/obj/item/projectile/bullet/pistol/webly445
+	damage = DAMAGE_MEDIUM+7
+	penetrating = 2
 	armor_penetration = 7
+
+/obj/item/projectile/bullet/pistol/a38
+	damage = DAMAGE_MEDIUM+4
+	penetrating = 1
+	armor_penetration = 6
 
 /obj/item/projectile/bullet/pistol/a41
 	damage = DAMAGE_MEDIUM+2
@@ -220,13 +338,18 @@
 	penetrating = 1
 	armor_penetration = 13
 
+/obj/item/projectile/bullet/rifle/a44magnum
+	damage = DAMAGE_HIGH-7
+	penetrating = 2
+	armor_penetration = 13
+
 /obj/item/projectile/bullet/rifle/a4570
 	damage = DAMAGE_HIGH+3
 	penetrating = 2
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/rifle/a792x57
-	damage = DAMAGE_HIGH+2
+	damage = DAMAGE_HIGH+4
 	penetrating = 2
 	armor_penetration = 20
 
@@ -237,7 +360,7 @@
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/rifle/a765x53
-	damage = DAMAGE_HIGH+1
+	damage = DAMAGE_HIGH+3
 	penetrating = 2
 	armor_penetration = 17
 
@@ -256,6 +379,12 @@
 	damage = DAMAGE_HIGH+2
 	penetrating = 2
 	armor_penetration = 17
+
+/obj/item/projectile/bullet/rifle/a77x58_wood
+	damage = 2
+	penetrating = 0
+	armor_penetration = 0
+
 /obj/item/projectile/bullet/rifle/a77x58/weak/New()
 	..()
 	damage = (DAMAGE_HIGH+2)/2
@@ -335,7 +464,7 @@ obj/item/projectile/bullet/rifle/a545x39
 	armor_penetration = 20
 
 obj/item/projectile/bullet/rifle/a556x45
-	damage = DAMAGE_MEDIUM+4
+	damage = DAMAGE_MEDIUM+8
 	penetrating = 1
 	armor_penetration = 12
 
@@ -353,6 +482,11 @@ obj/item/projectile/bullet/rifle/a556x45
 	damage = DAMAGE_MEDIUM + 2
 	penetrating = 2
 	armor_penetration = 12
+
+/obj/item/projectile/bullet/rifle/a50cal
+	damage = DAMAGE_HIGH + 20
+	penetrating = 10
+	armor_penetration = 20
 
 /obj/item/projectile/bullet/pistol/a44p
 	damage = DAMAGE_MEDIUM + 2

@@ -9,17 +9,28 @@
 	throwforce = 3.0
 	item_state = "plough"
 	w_class = 3.0
-	matter = list(DEFAULT_WALL_MATERIAL = 50)
+
 	attack_verb = list("bashed", "bludgeoned", "whacked")
 	sharp = FALSE
 	edge = FALSE
 	slot_flags = SLOT_BELT
 	flammable = TRUE
+	var/usespeed = 1
 
 /obj/item/weapon/plough/attack_self(var/mob/living/L)
 	var/turf/T = get_turf(L)
 	T.attackby(src,L)
 	return
+
+/obj/item/weapon/plough/iron
+	name = "iron plough"
+	desc = "A sturdy iron plough, use it on dirt to plough the land."
+	icon = 'icons/obj/items.dmi'
+	icon_state = "iplough"
+	item_state = "iplough"
+	attack_verb = list("bashed", "bludgeoned", "whacked")
+	sharp = TRUE
+	usespeed = 1.3
 
 /obj/item/weapon/shovel
 	name = "shovel"
@@ -31,7 +42,7 @@
 	throwforce = 4.0
 	item_state = "shovel"
 	w_class = 3.0
-	matter = list(DEFAULT_WALL_MATERIAL = 50)
+
 	attack_verb = list("bashed", "bludgeoned", "thrashed", "whacked")
 	sharp = FALSE
 	edge = TRUE
@@ -93,7 +104,10 @@
 	name = "bone pickaxe"
 	icon_state = "pickaxe_bone"
 	usespeed = 1
-
+/obj/item/weapon/pickaxe/stone
+	name = "stone pickaxe"
+	usespeed = 1.1
+	icon_state = "spick"
 /obj/item/weapon/shovel/spade
 	name = "spade"
 	desc = "A small tool for digging and moving dirt."
@@ -153,7 +167,7 @@
 	edge = FALSE
 	flammable = FALSE
 	//Designs possible are "smooth", "cave", "brick", "cobbled", "tiled"
-	var design = "smooth"
+	var/design = "smooth"
 
 /obj/item/weapon/chisel/attack_self(mob/user)
 	var/display = list("Smooth", "Cave", "Brick", "Cobbled", "Tiled", "Cancel")

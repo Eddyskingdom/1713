@@ -4,6 +4,7 @@
 	desc = ""
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "wood_ship"
+	var/base_icon_state = "wood_ship"
 	var/passable = TRUE
 	var/origin_covered = FALSE
 	var/origin_water_level = 0
@@ -26,6 +27,7 @@
 	var/bullethole_count = 0
 //	invisibility = 101 //starts invisible
 	var/material = "Wood" //Depending on mat, depending on what harms it.
+	var/adjusts = FALSE //if it adjusts acording to neighbouring sprites
 /*
 
 /obj/covers/attackby(obj/item/W as obj, mob/user as mob)
@@ -72,16 +74,100 @@
 	layer = 1.99
 	material = "Wood"
 
+/obj/covers/thatch
+	name = "thatch floor"
+	icon = 'icons/turf/flooring/wood.dmi'
+	icon_state = "thatch1"
+	passable = TRUE
+	amount = 1
+	layer = 1.99
+	material = "Wood"
+
+/obj/covers/thatch2
+	name = "thatch floor"
+	icon = 'icons/turf/flooring/wood.dmi'
+	icon_state = "thatch2"
+	passable = TRUE
+	amount = 1
+	layer = 1.99
+	material = "Wood"
+
+/obj/covers/fancywood
+	name = "wood floor"
+	icon = 'icons/turf/flooring/wood.dmi'
+	icon_state = "fancywood"
+	passable = TRUE
+	amount = 1
+	layer = 1.99
+	material = "Wood"
+
 /obj/covers/wood/stairs
 	name = "wood stairs"
 	icon = 'icons/obj/stairs.dmi'
 	icon_state = "wood2_stairs"
 	material = "Wood"
 
+/obj/covers/slate
+    name = "slatestone wall"
+    desc = "A slate wall."
+    icon = 'icons/obj/structures.dmi'
+    icon_state = "slate"
+    passable = TRUE
+    not_movable = TRUE
+    density = TRUE
+    opacity = TRUE
+    amount = 0
+    layer = 3
+    health = 500
+    wood = FALSE
+    wall = TRUE
+    flammable = FALSE
+    explosion_resistance = 10
+    material = "Stone"
+
 /obj/covers/cobblestone
 	name = "cobblestone floor"
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "cobble_vertical_dark"
+	passable = TRUE
+	not_movable = TRUE
+	amount = 0
+	wood = FALSE
+	layer = 1.99
+	flammable = FALSE
+	explosion_resistance = 2
+	material = "Stone"
+
+/obj/covers/romanroad
+	name = "roman road"
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "roman_road"
+	passable = TRUE
+	not_movable = TRUE
+	amount = 0
+	wood = FALSE
+	layer = 1.99
+	flammable = FALSE
+	explosion_resistance = 2
+	material = "Stone"
+
+/obj/covers/marblefloor
+	name = "marble floor"
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "marble"
+	passable = TRUE
+	not_movable = TRUE
+	amount = 0
+	wood = FALSE
+	layer = 1.99
+	flammable = FALSE
+	explosion_resistance = 2
+	material = "Stone"
+
+/obj/covers/slatefloor
+	name = "slate floor"
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "slatefloor"
 	passable = TRUE
 	not_movable = TRUE
 	amount = 0
@@ -118,53 +204,68 @@
 				continue
 		if ((WEST in sideslist) && (EAST in sideslist) && (NORTH in sideslist) && (SOUTH in sideslist))
 			icon_state = "d_road+" //4 sides
+			base_icon_state = icon_state
 			return
 		if (vertical)
 			if (WEST in sideslist)
 				if (!(NORTH in sideslist))
 					if (EAST in sideslist)
-						icon_state = "d_roadswe" //T, SOUTH EAST WEST
-						return
+						icon_state = "d_roadtswe" //T, SOUTH EAST WEST
+						base_icon_state = icon_state
 					else
 						icon_state = "d_roadsw" //Turn, SOUTH-WEST
-						return
+						base_icon_state = icon_state
 				else if (!(SOUTH in sideslist))
 					if (EAST in sideslist)
-						icon_state = "d_roadnwe" //T, NORTH EAST WEST
-						return
+						icon_state = "d_roadtnwe" //T, NORTH EAST WEST
+						base_icon_state = icon_state
 					else
 						icon_state = "d_roadnw" //Turn, NORTH-WEST
-						return
+						base_icon_state = icon_state
 			else if (EAST in sideslist)
 				if (!(NORTH in sideslist))
 					icon_state = "d_roadse" //Turn, SOUTH-EAST
+					base_icon_state = icon_state
 					return
 				else if (!(SOUTH in sideslist))
-					icon_state = "d_roadne" //T, NORTH-EAST
-					return
+					icon_state = "d_roadne" //Turn, NORTH-EAST
+					base_icon_state = icon_state
 		else
 			if (NORTH in sideslist)
 				if (!(EAST in sideslist))
 					if (SOUTH in sideslist)
-						icon_state = "d_roadnsw" //T, NORTH SOUTH WEST
-						return
+						icon_state = "d_roadtnsw" //T, NORTH SOUTH WEST
+						base_icon_state = icon_state
 					else
 						icon_state = "d_roadnw" //Turn, NORTH-WEST
-						return
+						base_icon_state = icon_state
 				else if (!(WEST in sideslist))
 					if (SOUTH in sideslist)
-						icon_state = "d_roadnse" //T, NORTH SOUTH EAST
-						return
+						icon_state = "d_roadtnse" //T, NORTH SOUTH EAST
+						base_icon_state = icon_state
 					else
 						icon_state = "d_roadne" //Turn, NORTH-EAST
-						return
+						base_icon_state = icon_state
 			else if (SOUTH in sideslist)
 				if (!(EAST in sideslist))
 					icon_state = "d_roadsw" //Turn, SOUTH-WEST
-					return
+					base_icon_state = icon_state
 				else if (!(WEST in sideslist))
 					icon_state = "d_roadse" //Turn, SOUTH-EAST
-					return
+					base_icon_state = icon_state
+		if (WEST in sideslist && NORTH in sideslist && SOUTH in sideslist)
+			icon_state = "d_roadtnsw" //T, NORTH SOUTH WEST
+			base_icon_state = icon_state
+		if (WEST in sideslist && NORTH in sideslist && EAST in sideslist)
+			icon_state = "d_roadtnwe" //T, NORTH EAST WEST
+			base_icon_state = icon_state
+		if (WEST in sideslist && EAST in sideslist && SOUTH in sideslist)
+			icon_state = "d_roadtswe" //T, SOUTH EAST WEST
+			base_icon_state = icon_state
+		if (EAST in sideslist && NORTH in sideslist && SOUTH in sideslist)
+			icon_state = "d_roadtnse" //T, NORTH SOUTH EAST
+			base_icon_state = icon_state
+
 /obj/covers/roads/New()
 	..()
 	spawn(2)
@@ -198,6 +299,7 @@
 /obj/covers/road/New()
 	..()
 	icon_state = pick("road_1","road_2","road_3")
+	base_icon_state = icon_state
 
 /obj/covers/steelplating
 	name = "steel floor"
@@ -232,6 +334,7 @@
 /obj/covers/concretefloor/New()
 	..()
 	icon_state = pick("concrete6","concrete7")
+	base_icon_state = icon_state
 
 /obj/covers/sandstone
 	name = "sandstone floor"
@@ -444,14 +547,14 @@
 	name = "medieval wall crossbeam"
 	desc = "A dark-ages wall with an slanted support."
 	icon = 'icons/turf/walls.dmi'
-	icon_state = "medieval_wall_y2"
+	icon_state = "medieval_wall_y1"
 	health = 185
 
 /obj/covers/wood_wall/medieval/y/l
 	name = "medieval wall crossbeam"
 	desc = "A dark-ages wall with an slanted support."
 	icon = 'icons/turf/walls.dmi'
-	icon_state = "medieval_wall_y1"
+	icon_state = "medieval_wall_y2"
 	health = 185
 
 /obj/covers/wood_wall/shoji
@@ -560,29 +663,35 @@
 			//Designs possible are "smooth", "cave", "brick", "cobbled", "tiled"
 				if(design == "smooth")
 					src.icon_state = "b_stone_wall"
+					base_icon_state = icon_state
 					src.name = "stone wall"
 					src.desc = "A cave wall carved smooth."
 				else if(design == "cave")
 					src.icon_state = "rocky"
+					base_icon_state = icon_state
 					src.name = "underground cave wall"
 					src.desc = "A cave wall."
 				else if(design == "undercave")
 					src.icon_state = "rock"
+					base_icon_state = icon_state
 					src.name = "cave wall"
 					src.desc = "A cave wall."
 				else if(design == "brick")
 					src.icon_state = "b_brick_stone_wall"
+					base_icon_state = icon_state
 					src.name = "stone brick wall"
 					src.desc = "A cave wall carved to look like its made of stone bricks."
 				else if(design == "cobbled")
 					src.icon_state = "b_cobbled_stone_wall"
+					base_icon_state = icon_state
 					src.name = "cobbled stone wall"
 					src.desc = "A cave wall carved to look like piled up stones."
 				else if(design == "tiled")
 					src.icon_state = "b_tiled_stone_wall"
+					base_icon_state = icon_state
 					src.name = "tiled stone wall"
 					src.desc = "A cave wall carved to have a tiled stone pattern."
-				else
+				return
 	..()
 
 /obj/covers/sandstone_smooth_wall
@@ -706,6 +815,7 @@
 				user << "You finish adding dirt to the wall."
 				stage = (stage+1)
 				icon_state = "drysod_wall_inc[stage]"
+				base_icon_state = icon_state
 				health = (20*stage)
 				qdel(W)
 				return
@@ -765,6 +875,7 @@
 				user << "You finish clay block to the wall."
 				stage += 1
 				icon_state = "claybrickwall_inc[stage]"
+				base_icon_state = icon_state
 				health = (30*stage)
 				qdel(W)
 				return
@@ -815,21 +926,21 @@
 				qdel(W)
 				var/obj/covers/clay_wall/sumerian/S = new /obj/covers/clay_wall/sumerian(loc)
 				qdel(src)
-				var/choice = WWinput(user, "What time of wall?","Clay Walls","Normal",list("Normal","Doorway","Window","Corner"))
+				var/choice = WWinput(user, "What type of wall?","Clay Walls","Normal",list("Normal","Doorway","Window","Corner"))
 				if (choice == "Normal")
 					return
 				else if (choice == "Doorway")
 					S.icon_state = "sumerian-door"
+					base_icon_state = icon_state
 					S.name = "sumerian clay door"
 					S.density = FALSE
 					S.opacity = FALSE
 				else if (choice == "Window")
-					S.icon_state = "sumerian-window"
-					S.name = "sumerian clay window"
-					S.density = TRUE
-					S.opacity = FALSE
+					new /obj/structure/window_frame/sumerian(loc)
+					qdel(src)
 				else if (choice == "Corner")
 					S.icon_state = "sumerian-corner1"
+					base_icon_state = icon_state
 					var/choice1 = WWinput(user, "Which corner?","Clay Walls","North-West",list("North-West","North-East","South-West","South-East"))
 					if (choice1 == "North-West")
 						S.dir = SOUTH
@@ -846,6 +957,7 @@
 				user << "You finish adding clay to the wall."
 				stage += 1
 				icon_state = "sumerian-wall_inc[stage]"
+				base_icon_state = icon_state
 				health = (30*stage)
 				qdel(W)
 				return
@@ -885,6 +997,42 @@
 	flammable = FALSE
 	explosion_resistance = 7
 	material = "Stone"
+
+/obj/covers/vault
+	name = "vault wall"
+	desc = "A very strong wall of concrete wall."
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "vault"
+	passable = TRUE
+	not_movable = TRUE
+	density = TRUE
+	opacity = TRUE
+	amount = 0
+	layer = 3
+	health = 800
+	wood = FALSE
+	wall = TRUE
+	flammable = FALSE
+	explosion_resistance = 10
+	material = "Stone"
+
+/obj/covers/slate
+    name = "slatestone wall"
+    desc = "A slate wall."
+    icon = 'icons/obj/structures.dmi'
+    icon_state = "slate"
+    passable = TRUE
+    not_movable = TRUE
+    density = TRUE
+    opacity = TRUE
+    amount = 0
+    layer = 3
+    health = 500
+    wood = FALSE
+    wall = TRUE
+    flammable = FALSE
+    explosion_resistance = 10
+    material = "Stone"
 
 /obj/covers/cement_wall/incomplete
 	name = "cement wall"
@@ -942,10 +1090,13 @@
 		user << "You start adding bricks to the wall..."
 		if (do_after(user, 20, src))
 			user << "You finish adding bricks to the wall, completing it."
+			var/choice = WWinput(user, "What type of wall?","Brick Walls","Wall",list("Wall","Window"))
+			if (choice == "Wall")
+				new /obj/covers/brick_wall(loc)
+			else if (choice == "Window")
+				new /obj/structure/window_frame/brick(loc)
 			qdel(W)
-			new /obj/covers/brick_wall(loc)
 			qdel(src)
-			return
 			return
 	..()
 
@@ -1067,11 +1218,10 @@
 /obj/covers/updateturf()
 	..()
 	var/turf/T = get_turf(src)
-	origin_water_level = T.water_level
-	T.water_level = 0
-	T.move_delay = 0
-	origin_covered = T.iscovered
-	T.iscovered = TRUE
+	if (T)
+		origin_water_level = T.water_level
+		T.water_level = 0
+		T.move_delay = 0
 	return TRUE
 
 
@@ -1082,9 +1232,9 @@
 			new current_area_type(get_turf(src))
 			visible_message("The roof collapses!")
 		var/turf/floor/T = get_turf(loc)
-		T.iscovered = origin_covered
-		T.water_level = origin_water_level
-		T.move_delay = initial(T.move_delay)
+		if (T)
+			T.water_level = origin_water_level
+			T.move_delay = initial(T.move_delay)
 	if (amount > 0)
 		var/obj/item/stack/material/wood/wooddrop = new /obj/item/stack/material/wood
 		wooddrop.amount = amount
@@ -1269,3 +1419,63 @@
 			try_destroy()
 			qdel(SF)
 			return
+
+///////////////////////////////COVER WALL BORDERS//////////////////////////////
+/obj/covers/proc/check_relatives(var/update_self = FALSE, var/update_others = FALSE)
+	if (!adjusts)
+		return
+	var/junction
+	if (update_self)
+		junction = FALSE
+	for (var/checkdir in cardinal)
+		var/turf/T = get_step(src, checkdir)
+		for(var/obj/covers/CV in T)
+			if (!can_join_with(CV))
+				continue
+			if (update_self)
+				if (can_join_with(CV))
+					junction |= get_dir(src,CV)
+			if (update_others)
+				CV.check_relatives(1,0)
+	if (!isnull(junction))
+		icon_state = "[base_icon_state][junction]"
+	return
+
+/obj/covers/proc/can_join_with(var/obj/covers/W)
+	if (istype(W,src))
+		return TRUE
+	return FALSE
+
+/obj/covers/update_icon()
+	..()
+	check_relatives(1,1)
+
+/obj/covers/New()
+	..()
+	check_relatives(1,1)
+
+/obj/covers/Destroy()
+	check_relatives(0,1)
+	..()
+////////////////////////////////////////////////////////////
+
+/obj/covers/wood_wall/aztec
+	name = "aztec wood wall"
+	desc = "A wood wall, in Aztec style."
+	icon_state = "aztec0"
+	base_icon_state = "aztec"
+	adjusts = TRUE
+
+/obj/covers/wood_wall/nordic
+	name = "nordic wood wall"
+	desc = "A wood wall, in Northern European style."
+	icon_state = "nordic0"
+	base_icon_state = "nordic"
+	adjusts = TRUE
+
+/obj/covers/stone_wall/roman
+	name = "roman stone wall"
+	desc = "A Roman style stone wall."
+	icon_state = "roman0"
+	base_icon_state = "roman"
+	adjusts = TRUE

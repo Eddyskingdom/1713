@@ -1,5 +1,5 @@
 /mob/living/simple_animal/parrot
-	name = "Parrot"
+	name = "parrot"
 	desc = "A parrot. Maybe it can sit on your shoulder?."
 	icon = 'icons/mob/animal.dmi'
 	icon_state = "parrot_sit"
@@ -18,6 +18,7 @@
 	mob_size = MOB_SMALL
 	possession_candidate = TRUE
 	granivore = 1
+	behaviour = "wander"
 ///////////////////////////////////////CHICKENS////////////////////////
 
 /mob/living/simple_animal/chick
@@ -44,12 +45,13 @@
 	pass_flags = PASSTABLE
 	mob_size = MOB_MINISCULE
 	granivore = 1
+	behaviour = "wander"
 
 /mob/living/simple_animal/chick/New()
 	..()
 	pixel_x = rand(-6, 6)
 	pixel_y = rand(0, 10)
-	chicken_count++
+	chicken_count+=1
 
 /mob/living/simple_animal/chick/Life()
 	. =..()
@@ -61,10 +63,16 @@
 			new /mob/living/simple_animal/chicken(loc)
 			qdel(src)
 
-/mob/living/simple_animal/chick/Destroy()
+/mob/living/simple_animal/chick/death()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		chicken_count -= 1
 	..()
-	chicken_count -= 1
-
+/mob/living/simple_animal/chick/Destroy()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		chicken_count -= 1
+	..()
 /mob/living/simple_animal/chicken
 	name = "\improper chicken"
 	desc = "Hopefully the eggs are good this season."
@@ -91,6 +99,7 @@
 	pass_flags = PASSTABLE
 	mob_size = MOB_SMALL
 	granivore = 1
+	behaviour = "wander"
 
 /mob/living/simple_animal/chicken/New()
 	..()
@@ -104,10 +113,16 @@
 	pixel_y = rand(0, 10)
 	chicken_count += 1
 
-/mob/living/simple_animal/chicken/Destroy()
+/mob/living/simple_animal/chicken/death()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		chicken_count -= 1
 	..()
-	chicken_count -= 1
-
+/mob/living/simple_animal/chicken/Destroy()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		chicken_count -= 1
+	..()
 /mob/living/simple_animal/chicken/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (stat == CONSCIOUS && istype(O, /obj/item/stack/farming/seeds))
 		var/obj/item/stack/S = O
@@ -202,6 +217,7 @@
 	pass_flags = PASSTABLE
 	mob_size = MOB_SMALL
 	granivore = 1
+	behaviour = "wander"
 
 /mob/living/simple_animal/rooster/New()
 	..()
@@ -215,9 +231,16 @@
 	pixel_y = rand(0, 10)
 	chicken_count += 1
 
-/mob/living/simple_animal/rooster/Destroy()
+/mob/living/simple_animal/rooster/death()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		chicken_count -= 1
 	..()
-	chicken_count -= 1
+/mob/living/simple_animal/rooster/Destroy()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		chicken_count -= 1
+	..()
 ////////////////////////////////////////TURKEYS//////////////////////
 /mob/living/simple_animal/turkey_f
 	name = "\improper turkey"
@@ -243,6 +266,7 @@
 	var/eggsleft = 5
 	var/egg_timer = FALSE
 	granivore = 1
+	behaviour = "wander"
 
 /mob/living/simple_animal/turkey_m
 	name = "\improper turkey"
@@ -267,6 +291,7 @@
 	pass_flags = PASSTABLE
 	mob_size = MOB_MEDIUM
 	granivore = 1
+	behaviour = "wander"
 
 /mob/living/simple_animal/goose
 	name = "\improper goose"
@@ -291,6 +316,9 @@
 	pass_flags = PASSTABLE
 	mob_size = MOB_MEDIUM
 	granivore = 1
+	behaviour = "defends"
+	melee_damage_lower = 3
+	melee_damage_upper = 7
 
 /mob/living/simple_animal/turkeychick
 	name = "\improper turkey chick"
@@ -316,6 +344,7 @@
 	pass_flags = PASSTABLE
 	mob_size = MOB_MINISCULE
 	granivore = 1
+	behaviour = "wanders"
 
 /mob/living/simple_animal/turkeychick/New()
 	..()
@@ -340,21 +369,40 @@
 	..()
 	turkey_count += 1
 
-/mob/living/simple_animal/turkey_m/Destroy()
+/mob/living/simple_animal/turkey_m/death()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		turkey_count -= 1
 	..()
-	turkey_count -= 1
+/mob/living/simple_animal/turkey_m/Destroy()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		turkey_count -= 1
+	..()
 /mob/living/simple_animal/turkey_f/New()
 	..()
 	turkey_count += 1
 
+/mob/living/simple_animal/turkey_f/death()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		turkey_count -= 1
+	..()
 /mob/living/simple_animal/turkey_f/Destroy()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		turkey_count -= 1
 	..()
-	turkey_count -= 1
-
+/mob/living/simple_animal/turkeychick/death()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		turkey_count -= 1
+	..()
 /mob/living/simple_animal/turkeychick/Destroy()
+	if (!removed_from_list)
+		removed_from_list=TRUE
+		turkey_count -= 1
 	..()
-	turkey_count -= 1
-
 /mob/living/simple_animal/turkey_f/Life()
 	. =..()
 	if (!.)

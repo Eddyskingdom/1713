@@ -224,8 +224,23 @@
 	cocked = FALSE
 
 /obj/item/weapon/gun/projectile/revolver/coltnewpolice
+	name = "Colt new police"
+	desc = "Common revolver used by police."
+	icon_state = "coltnewpolice"
+	w_class = 2
+	caliber = "a38"
+	load_method = SINGLE_CASING
+	handle_casings = CYCLE_CASINGS
+	max_shells = 6
+	magazine_type = /obj/item/ammo_magazine/c38
+	weight = 2.3
+	single_action = TRUE
+	blackpowder = TRUE
+	cocked = FALSE
+
+/obj/item/weapon/gun/projectile/revolver/coltnewpolice
 	name = "Colt new police 32"
-	desc = "Officialy the M1873 Colt Single Action Army Revolver."
+	desc = "Common revolver used by police."
 	icon_state = "coltnewpolice"
 	w_class = 2
 	caliber = "a32"
@@ -233,6 +248,36 @@
 	handle_casings = CYCLE_CASINGS
 	max_shells = 6
 	magazine_type = /obj/item/ammo_magazine/c32
+	weight = 2.3
+	single_action = TRUE
+	blackpowder = TRUE
+	cocked = FALSE
+
+/obj/item/weapon/gun/projectile/revolver/enfieldno2
+	name = "Enfield No. 2"
+	desc = "British revolver made with love."
+	icon_state = "Enfield02"
+	w_class = 2
+	caliber = "a41"
+	load_method = SINGLE_CASING
+	handle_casings = CYCLE_CASINGS
+	max_shells = 6
+	magazine_type = /obj/item/ammo_magazine/c41
+	weight = 2.3
+	single_action = TRUE
+	blackpowder = TRUE
+	cocked = FALSE
+
+/obj/item/weapon/gun/projectile/revolver/webly4
+	name = "Webly Mk IV"
+	desc = "British revolver chambered in (.445)."
+	icon_state = "webly4"
+	w_class = 2
+	caliber = "webly445"
+	load_method = SINGLE_CASING
+	handle_casings = CYCLE_CASINGS
+	max_shells = 6
+	magazine_type = /obj/item/ammo_magazine/webly445
 	weight = 2.3
 	single_action = TRUE
 	blackpowder = TRUE
@@ -250,6 +295,54 @@
 	max_shells = 6
 	magazine_type = /obj/item/ammo_magazine/c44
 	weight = 2.3
+	single_action = TRUE
+	blackpowder = TRUE
+	cocked = FALSE
+
+/obj/item/weapon/gun/projectile/revolver/graysonfito12
+	name = "Grayson Fito 12"
+	desc = "A expensive revolver made by Grayson."
+	icon_state = "graysonfito"
+	base_icon = "graysonfito"
+	w_class = 2
+	caliber = "a44magnum"
+	load_method = SINGLE_CASING
+	handle_casings = CYCLE_CASINGS
+	max_shells = 6
+	magazine_type = /obj/item/ammo_magazine/c44magnum
+	weight = 2.3
+	single_action = TRUE
+	blackpowder = TRUE
+	cocked = FALSE
+
+/obj/item/weapon/gun/projectile/revolver/magnum44
+	name = "Magnum 44"
+	desc = "A heavy revolver chambered in (magnum .44)."
+	icon_state = "magnum58"
+	base_icon = "magnum58"
+	w_class = 2
+	caliber = "a44magnum"
+	load_method = SINGLE_CASING
+	handle_casings = CYCLE_CASINGS
+	max_shells = 6
+	magazine_type = /obj/item/ammo_magazine/c44magnum
+	weight = 2.3
+	single_action = TRUE
+	blackpowder = TRUE
+	cocked = FALSE
+
+/obj/item/weapon/gun/projectile/revolver/smithwesson
+	name = "Smith Wesson 32"
+	desc = "A smith 'n Wesson revolver, chambered in (.32)."
+	icon_state = "smithwesson32"
+	base_icon = "smithwesson32"
+	w_class = 1
+	caliber = "a32"
+	load_method = SINGLE_CASING
+	handle_casings = CYCLE_CASINGS
+	max_shells = 6
+	magazine_type = /obj/item/ammo_magazine/c32
+	weight = 1.6
 	single_action = TRUE
 	blackpowder = TRUE
 	cocked = FALSE

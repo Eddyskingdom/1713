@@ -17,12 +17,6 @@
 /obj/item/weapon/paper_bundle/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
 
-	if (istype(W, /obj/item/weapon/paper/carbon))
-		var/obj/item/weapon/paper/carbon/C = W
-		if (!C.iscopy && !C.copied)
-			user << "<span class='notice'>Take off the carbon copy first.</span>"
-			add_fingerprint(user)
-			return
 	// adding sheets
 	if (istype(W, /obj/item/weapon/paper))
 		insert_sheet_at(user, pages.len+1, W)
@@ -171,7 +165,7 @@
 			update_icon()
 	else
 		usr << "<span class='notice'>You need to hold it in hands!</span>"
-	if (istype(loc, /mob) ||istype(loc.loc, /mob))
+	if (istype(loc, /mob) || istype(loc.loc, /mob))
 		attack_self(usr)
 		updateUsrDialog()
 

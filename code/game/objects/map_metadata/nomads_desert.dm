@@ -1,8 +1,9 @@
-#define NO_WINNER "The round is proceeding normally."
+
 /obj/map_metadata/nomads_desert
 	ID = MAP_NOMADS_DESERT
 	title = "Nomads (Desert) (225x225x2)"
 	lobby_icon_state = "civ13"
+	no_winner ="The round is proceeding normally."
 	caribbean_blocking_area_types = list(/area/caribbean/no_mans_land/invisible_wall/)
 	respawn_delay = 6000 // 10 minutes!
 	squad_spawn_locations = FALSE
@@ -46,37 +47,8 @@
 /obj/map_metadata/nomads_desert/cross_message(faction)
 	return ""
 
-/obj/map_metadata/nomads_desert/proc/seasons()
-	if (real_season == "dry")
-		season = "Wet Season"
-		world << "<big>The <b>Wet Season</b> has started.</big>"
-			change_weather_somehow()
-		for(var/obj/structure/sink/S)
-			if (istype(S, /obj/structure/sink/well) || istype(S, /obj/structure/sink/puddle))
-				S.dry = FALSE
-				S.update_icon()
-		for (var/turf/floor/beach/drywater/D)
-			D.ChangeTurf(/turf/floor/beach/water/swamp)
-		real_season = "wet"
-	else
-		season = "Dry Season"
-		world << "<big>The <b>Dry Season</b> has started.</big>"
-			change_weather_somehow()
-		for(var/obj/structure/sink/S)
-			if (istype(S, /obj/structure/sink/well) || istype(S, /obj/structure/sink/puddle))
-				S.dry = TRUE
-				S.update_icon()
-		for (var/turf/floor/beach/water/swamp/D)
-			D.ChangeTurf(/turf/floor/beach/drywater)
-		real_season = "dry"
-
-	spawn(18000)
-		seasons()
-
-
 /obj/map_metadata/nomads_desert/job_enabled_specialcheck(var/datum/job/J)
 	if (J.is_nomad == TRUE)
 		. = TRUE
 	else
 		. = FALSE
-#undef NO_WINNER

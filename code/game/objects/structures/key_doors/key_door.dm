@@ -44,7 +44,7 @@ var/list/nonbreaking_types = list(
 		if (unique_door_name && map_door_name == "door")
 			name = "[unique_door_name] door"
 		else if (map_door_name != "door")
-			name = "[map_door_name] Door"
+			name = "[map_door_name] door"
 
 	// should fix doors always being the wrong type
 	spawn (5)
@@ -98,7 +98,7 @@ var/list/nonbreaking_types = list(
 		if (W.code != custom_code)
 			user << "None of the keys match this lock!"
 	else
-		if ((W.force > WEAPON_FORCE_WEAK || user.a_intent == I_HURT) && check_can_break_doors(W))
+		if ((W.force > WEAPON_FORCE_WEAK || user.a_intent == I_HARM) && check_can_break_doors(W))
 			if (!user.hitting_key_door)
 				user.hitting_key_door = TRUE
 				visible_message("<span class = 'danger'>[user] hits the door with [W]!</span>")
@@ -126,7 +126,7 @@ var/list/nonbreaking_types = list(
 		if (keyslot.check_weapon(W, user, TRUE))
 			keyslot.locked = !keyslot.locked
 	else
-		if ((W.force > WEAPON_FORCE_WEAK || user.a_intent == I_HURT) && check_can_break_doors(W))
+		if ((W.force > WEAPON_FORCE_WEAK || user.a_intent == I_HARM) && check_can_break_doors(W))
 			if (!user.hitting_key_door)
 				user.hitting_key_door = TRUE
 				visible_message("<span class = 'danger'>[user] hits the door with [W]!</span>")

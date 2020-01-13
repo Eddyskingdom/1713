@@ -528,7 +528,7 @@
 					mob << "<span class = '[snow_span]'>[snow_message]</span>"
 					mob.next_snow_message = world.time+100
 
-			else if (F.muddy && !H.lizard)
+			else if (F.muddy && !H.lizard && F_area.icon_state != "")
 				if (F_area.weather == WEATHER_STORM)
 					standing_on_snow = rand(4,5)
 				else
@@ -705,7 +705,7 @@
 
 				//Step on nerds in our way
 				if (mob_is_human)
-					if (H.a_intent == I_HURT)
+					if (H.a_intent == I_HARM)
 						for (var/mob/living/L in mob.loc)
 							if (L.lying && L != H && !istype(L, /mob/living/simple_animal/mosquito)) // you could step on yourself, this fixes it - Kachnov
 								H.visible_message("<span class = 'danger'>[H] steps on [L]!</span>")

@@ -37,12 +37,12 @@
 		var/content_size = FALSE
 		for (I in contents)
 			content_size += ceil(I.w_class/2)
-		if (content_size > storage_capacity-5)
+		if (content_size > 0 && content_size > storage_capacity-5)
 			storage_capacity = content_size + 5
 
 // max w_class/2 * items = enough to fit items amount of items no matter the size
 /obj/structure/closet/proc/update_capacity(items)
-	storage_capacity = ((4/2) * items) + 5
+	storage_capacity = max((2 * items) + 5,storage_capacity)
 
 /obj/structure/closet/examine(mob/user)
 	if (..(user, TRUE) && !opened)
@@ -204,34 +204,48 @@
 	return
 
 /obj/structure/closet/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/key) && !opened && !istype(src, /obj/structure/closet/hideout) && !istype(src, /obj/structure/closet/coffin))
-		var/obj/item/weapon/key/K = W
-		if (custom_code == 0 && K.code != 0)
-			var/choice = WWinput(user, "Are you sure you want to assign this key to \the [src]?", "Lock", "No", list("Yes","No"))
-			if (choice == "No")
-				return
-			else
-				locked = TRUE
-				opened = FALSE
-				custom_code = K.code
-				visible_message("<span class = 'notice'>[user] locks \the [src].</span>")
-				playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
-				return
-
-		if (K.code == custom_code)
-			locked = !locked
-			if (locked == 1)
-				visible_message("<span class = 'notice'>[user] locks \the [src].</span>")
-				playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
-				return
-			else if (locked == 0)
-				visible_message("<span class = 'notice'>[user] unlocks \the [src].</span>")
-				playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
-				return
-		if (W.code != custom_code)
+	if (!opened && !istype(src, /obj/structure/closet/hideout) && !istype(src, /obj/structure/closet/coffin))
+		if (istype(W, /obj/item/weapon/key))
+			var/obj/item/weapon/key/K = W
+			if (custom_code == 0 && K.code != 0)
+				var/choice = WWinput(user, "Are you sure you want to assign this key to \the [src]?", "Lock", "No", list("Yes","No"))
+				if (choice == "No")
+					return
+				else
+					locked = TRUE
+					opened = FALSE
+					custom_code = K.code
+					visible_message("<span class = 'notice'>[user] locks \the [src].</span>")
+					playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
+					return
+			if (K.code == custom_code)
+				locked = !locked
+				if (locked == 1)
+					visible_message("<span class = 'notice'>[user] locks \the [src].</span>")
+					playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
+					return
+				else if (locked == 0)
+					visible_message("<span class = 'notice'>[user] unlocks \the [src].</span>")
+					playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
+					return
+		else if (istype(W, /obj/item/weapon/storage/belt/keychain) && custom_code != 0)
+			for (var/obj/item/weapon/key/KK in W.contents)
+				if (KK.code == custom_code)
+					locked = !locked
+					if (locked == 1)
+						visible_message("<span class = 'notice'>[user] locks the [src].</span>")
+						playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
+						return
+					else if (locked == 0)
+						visible_message("<span class = 'notice'>[user] unlocks the [src].</span>")
+						playsound(get_turf(user), 'sound/effects/door_lock_unlock.ogg', 100)
+						return
+			user << "No key in this keychain matches the lock!"
+			return
+		if (istype(W, /obj/item/weapon/key) && W.code != custom_code)
 			user << "This key does not match this lock!"
 			return
-	if (istype(W, /obj/item/weapon/hammer) && user.a_intent == I_HURT)
+	if (istype(W, /obj/item/weapon/hammer) && user.a_intent == I_HARM)
 		if (!opened)
 			user << "You need to open the crate first."
 		else
@@ -246,13 +260,24 @@
 			var/obj/item/weapon/grab/G = W
 			MouseDrop_T(G.affecting, user)      //act like they were dragged onto the closet
 			return FALSE
-/*		if (istype(W,/obj/item/tk_grab))
-			return FALSE*/
 		if (W.loc != user) // This should stop mounted modules ending up outside the module.
 			return
 		usr.drop_item()
 		if (W)
-			W.forceMove(loc)
+			if (istype(src, /obj/structure/closet/crate/dumpster))
+				var/content_size = FALSE
+				for (var/obj/item/I in contents)
+					content_size += ceil(I.w_class/2)
+				if (content_size < storage_capacity)
+					W.forceMove(src)
+					user << "You throw \the [W] into \the [src]."
+					update_icon()
+					return
+				else
+					user << "<span class='warning'>\The [src] is too full!</span>"
+					return
+			else
+				W.forceMove(loc)
 	else
 		attack_hand(user)
 	return

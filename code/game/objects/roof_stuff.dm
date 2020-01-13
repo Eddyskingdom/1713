@@ -34,8 +34,7 @@
 //		A.climate = oldclimate
 	for (var/atom/movable/lighting_overlay/LO in get_turf(src))
 		LO.update_overlay()
-	spawn(50)
-		collapse_check()
+	collapse_check()
 /obj/roof/Destroy()
 	new current_area_type(get_turf(src))
 	for (var/atom/movable/lighting_overlay/LO in get_turf(src))
@@ -43,8 +42,8 @@
 	..()
 
 /obj/roof/proc/collapse_check()
-	var/supportfound = FALSE
 	spawn(50)
+		var/supportfound = FALSE
 		for (var/obj/structure/roof_support/RS in range(2, src))
 			supportfound = TRUE
 		for (var/obj/structure/mine_support/stone/SS in range(2, src))
@@ -63,8 +62,6 @@
 				M << "The roof collapses!"
 			Destroy()
 			qdel(src)
-		else
-			collapse_check()
 
 /obj/item/weapon/roofbuilder
 	name = "roof builder"
@@ -143,6 +140,11 @@
 	not_movable = TRUE
 	not_disassemblable = FALSE
 
+/obj/structure/roof_support/nordic
+	name = "nordic pillar"
+	desc = "A thick wood beam, in nordic style. Used to support roofs in large buildings."
+	icon_state = "nordic_pillar"
+
 /obj/structure/mine_support
 	name = "mine support"
 	desc = "A set of wood beams placed to support the mine shaft. Prevents cave-ins."
@@ -167,10 +169,25 @@
 	not_movable = TRUE
 	not_disassemblable = TRUE
 
-/obj/structure/mine_support/stone/New()
-	..()
-	icon_state = pick("support_st1","support_st2")
-	update_icon()
+/obj/structure/mine_support/stone/ionic
+	name = "Ionic column"
+	desc = "A Ionic-style column that can support roofs and mine shafts."
+	icon_state = "column_ionic"
+
+/obj/structure/mine_support/stone/solomonic
+	name = "Solomonic column"
+	desc = "A Solomonic-style column that can support roofs and mine shafts."
+	icon_state = "column_solomonic1"
+
+/obj/structure/mine_support/stone/solomonic/thick
+	name = "Solomonic column"
+	desc = "A Solomonic-style column that can support roofs and mine shafts."
+	icon_state = "column_solomonic2"
+
+/obj/structure/mine_support/stone/aztec
+	name = "Aztec column"
+	desc = "An Aztec-style column that can support roofs and mine shafts."
+	icon_state = "aztec_pillar"
 
 /obj/structure/mine_support/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon))
@@ -210,9 +227,13 @@
 		Destroy()
 		return
 
+/obj/structure/roof_support/Destroy()
+	for(var/obj/roof/R in range(3,get_turf(src)))
+		R.collapse_check()
+	..()
 
 /obj/structure/mine_support/Destroy()
 	if (istype(get_turf(src), /turf/floor))
-		var/turf/floor/T = get_turf(src)
-		T.collapse_check()
+		for(var/turf/floor/T in range(3,get_turf(src)))
+			T.collapse_check()
 	..()

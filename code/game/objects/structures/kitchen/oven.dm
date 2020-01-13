@@ -58,6 +58,14 @@
 		fuel += I.amount*3
 		qdel(I)
 		return
+	else if (istype(I, /obj/item/stack/ore/charcoal))
+		fuel += I.amount*1
+		qdel(I)
+		return
+	else if (istype(I, /obj/item/weapon/branch))
+		fuel += I.amount*1
+		qdel(I)
+		return
 	var/space = max_space
 	for (var/obj/item/II in contents)
 		space -= II.w_class
@@ -95,6 +103,11 @@
 					I.on_stove = FALSE
 					I.reagents.del_reagent("food_poisoning")
 					I.reagents.del_reagent("cholera")
+					if (I.reagents.get_reagent_amount("sodiumchloride")>0 && I.reagents.get_reagent_amount("water")>0)
+						var/obj/item/weapon/reagent_containers/food/condiment/saltpile/empty/NSP = new /obj/item/weapon/reagent_containers/food/condiment/saltpile/empty(get_turf(src))
+						NSP.reagents.add_reagent("sodiumchloride",I.reagents.get_reagent_amount("sodiumchloride"))
+						I.reagents.del_reagent("sodiumchloride")
+						I.reagents.del_reagent("water")
 			if (fuel <= 0 && consume_itself == TRUE)
 				visible_message("<span class = 'warning'>\The [src] burns out.</span>")
 				new/obj/item/stack/ore/charcoal(loc)
@@ -367,6 +380,14 @@
 				return
 			else if (istype(I, /obj/item/stack/ore/coal))
 				fuel += I.amount*3
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/weapon/branch))
+				fuel += I.amount*1
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/stack/ore/charcoal))
+				fuel += I.amount*1
 				qdel(I)
 				return
 			else if (istype(I, /obj/item/stack/ore/iron) || istype(I, /obj/item/stack/material/iron))

@@ -26,6 +26,25 @@
 	var/religion = "none"
 	layer = 3.2
 
+/obj/structure/religious/olmec_head
+	name = "large stone head"
+	desc = "A large stone head."
+	icon = 'icons/obj/cross.dmi'
+	icon_state = "olmec_head"
+	density = TRUE
+	anchored = TRUE
+	layer = 3.2
+
+/obj/structure/religious/totem_pole
+	name = "wood totem pole"
+	desc = "A wood totem pole, with several animals."
+	icon = 'icons/obj/obj32x64.dmi'
+	icon_state = "totem_pole"
+	density = TRUE
+	anchored = TRUE
+	layer = 3.2
+	flammable = TRUE
+
 /obj/structure/religious/totem/New()
 	..()
 	spawn(10)
@@ -475,3 +494,48 @@
 	else
 		user << "You failed to communicate with the gods. You need drugs to connect yourself with the astral plane."
 		return
+
+////////////////////STATUES///////////////////////
+/obj/structure/religious/statue
+	name = "statue"
+	desc = "A human statue."
+	icon = 'icons/obj/statue.dmi'
+	icon_state = "human_male_base"
+	density = TRUE
+	anchored = TRUE
+	layer = 3.2
+	var/list/statue_layers = list()
+	var/statue_material = "stone"
+	New()
+		..()
+		spawn(1)
+			if (name == "statue")
+				name = "[statue_material] statue"
+				update_icon()
+
+/obj/structure/religious/statue/update_icon()
+	..()
+	overlays.Cut()
+	for (var/i in statue_layers)
+		if (findtext(i, "cl_"))
+			var/image/timg = image(icon, i)
+			overlays += timg
+	for (var/i in statue_layers)
+		if (findtext(i, "obj_"))
+			var/image/timg = image(icon, i)
+			overlays += timg
+	color=get_material_by_name(statue_material).icon_colour
+
+/obj/structure/religious/statue/king
+	statue_layers = list("cl_king", "obj_spear", "obj_shield2")
+	statue_material = "stone"
+	New()
+		..()
+		name = "The King"
+
+/obj/structure/religious/statue/king/sandstone
+	statue_layers = list("cl_king", "obj_spear", "obj_shield2")
+	statue_material = "sandstone"
+	New()
+		..()
+		name = "The King"

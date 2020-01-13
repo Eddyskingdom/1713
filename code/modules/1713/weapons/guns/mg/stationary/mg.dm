@@ -50,15 +50,14 @@
 	else if (!locate(using_MG) in range(1, src) || stop_using)
 		use_MG(null)
 
-/mob/Move()
-	. = ..()
+/mob/living/carbon/human/Move()
 	handle_MG_operation()
+	..()
 
-/mob/update_canmove()
-	. = ..()
+/mob/living/carbon/human/update_canmove()
 	if (lying || stat)
 		handle_MG_operation(stop_using = TRUE)
-
+	..()
 
 /obj/item/weapon/gun/projectile/automatic/stationary/modern/update_icon()
 	if (ammo_magazine)
@@ -136,9 +135,12 @@ obj/item/weapon/gun/projectile/automatic/stationary/modern/maxim/ww2
 	desc = "A japanese heavy machinegun. Uses 7.7x58mm Arisaka rounds."
 	icon_state = "type98hmg"
 	base_icon = "type98hmg"
-	caliber = "a77x58_weak"
+	caliber = "a77x58"
 	magazine_type = /obj/item/ammo_magazine/type92
-	ammo_type = /obj/item/ammo_casing/a77x58/weak
+	ammo_type = /obj/item/ammo_casing/a77x58
+	firemodes = list(
+		list(name="full auto",	burst=1, burst_delay=0.8, move_delay=8, dispersion = list(0.7, 1.1, 1.1, 1.1, 1.3), recoil = 1.0),)
+	attachment_slots = ATTACH_SCOPE
 
 /obj/item/weapon/gun/projectile/automatic/stationary/modern/mg34
 	name = "MG 34 machine gun"

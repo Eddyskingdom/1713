@@ -139,7 +139,6 @@ var/list/recently_died = list()
 		if (civilization != "none" && map.custom_civs[civilization][4])
 			if (map.custom_civs[civilization][4].real_name == real_name)
 				map.custom_civs[civilization][4] = null
-
 	BATTLEREPORT_VARIABLE_CHECK(src)
 		if (!istype(src, /mob/living/carbon/human/corpse))
 			var/list/lists = get_battle_report_lists()
@@ -156,7 +155,9 @@ var/list/recently_died = list()
 			recently_died += storedRoundUID
 			spawn (200)
 				recently_died -= storedRoundUID
-
+	if (start_to_rot == FALSE)
+		start_to_rot = TRUE
+		do_rotting()
 	..()
 
 

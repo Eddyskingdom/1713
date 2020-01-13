@@ -89,9 +89,7 @@ var/list/delayed_garbage = list()
 		destroyed.Cut(1, 2)
 		PROCESS_TICK_CHECK
 
-#undef GC_FORCE_DEL_PER_TICK
 #undef GC_COLLECTION_TIMEOUT
-#undef GC_COLLECTIONS_PER_TICK
 
 // this process does not use current_list, which will be == null
 /process/garbage/reset_current_list()
@@ -176,6 +174,7 @@ var/list/delayed_garbage = list()
 		. = !A.Destroy()
 		if (. && A)
 			A.finalize_qdel()
+
 	if (A && isatom(A))
 		var/atom/AT = A
 		AT.invisibility = 101
@@ -183,7 +182,8 @@ var/list/delayed_garbage = list()
 		AT.icon_state = null
 		if (ismovable(A))
 			var/atom/movable/AM = A
-			AM.loc = null // maybe fixes projectiles, hopefully doesn't break anything - Kachnov
+			AM.loc = null
+
 
 /proc/qdel_list(var/list/L)
 	if (!L)
@@ -240,22 +240,9 @@ var/list/delayed_garbage = list()
 	tag = null
 	return
 
-#ifdef TESTING
 /client/var/running_find_references
 
-/mob/verb/create_thing()
-	set category = "Debug"
-	set name = "Create Thing"
-
-	var/path = input("Enter path")
-	var/atom/thing = new path(loc)
-	thing.find_references()
-
-/atom/verb/find_references()
-	set category = "Debug"
-	set name = "Find References"
-	set background = TRUE
-	set src in world
+/atom/proc/find_references()
 
 	if (!usr || !usr.client)
 		return
@@ -269,8 +256,8 @@ var/list/delayed_garbage = list()
 		return
 
 	// Remove this object from the list of things to be auto-deleted.
-	if (garbage)
-		garbage.destroyed -= "\ref[src]"
+	if (processes.garbage)
+		processes.garbage.destroyed -= "\ref[src]"
 
 	usr.client.running_find_references = type
 	testing("Beginning search for references to a [type].")
@@ -294,21 +281,14 @@ var/list/delayed_garbage = list()
 	testing("Completed search for references to a [type].")
 	usr.client.running_find_references = null
 
-/client/verb/purge_all_destroyed_objects()
+/client/proc/purge_all_destroyed_objects()
 	set category = "Debug"
-	if (garbage)
-		while (garbage.destroyed.len)
-			var/datum/o = locate(garbage.destroyed[1])
+	set name = "Purge Destroyed Objects"
+	if (processes.garbage)
+		while (processes.garbage.destroyed.len)
+			var/datum/o = locate(processes.garbage.destroyed[1])
 			if (istype(o) && o.gcDestroyed)
 				del(o)
-				garbage.dels++
-			garbage.destroyed.Cut(1, 2)
-#endif
-
-#ifdef GC_DEBUG
-#undef GC_DEBUG
-#endif
-
-#ifdef GC_FINDREF
-#undef GC_FINDREF
-#endif
+				processes.garbage.total_dels++
+				processes.garbage.hard_dels++
+			processes.garbage.destroyed.Cut(1, 2)

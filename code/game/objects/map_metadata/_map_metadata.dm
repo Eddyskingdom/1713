@@ -1,5 +1,3 @@
-#define NO_WINNER "Neither side has captured the other side's base."
-
 var/global/obj/map_metadata/map = null
 //Max levels showing players how far to advance, appears on the Character tab
 var/civmax_research = list(230,230,230)
@@ -12,6 +10,7 @@ var/civmax_research = list(230,230,230)
 	simulated = FALSE
 	invisibility = 101
 	var/ID = null // MUST be text, or aspects will break
+	var/no_winner = "Neither side has captured the other side's base."
 	var/title = null
 	var/lobby_icon_state = "civ13"
 	var/list/caribbean_blocking_area_types = list()
@@ -53,7 +52,7 @@ var/civmax_research = list(230,230,230)
 
 	// win conditions 3.0 - Kachnov
 	var/datum/win_condition/win_condition = null
-	var/current_win_condition = NO_WINNER
+	var/current_win_condition = "Neither side has captured the other side's base."
 	var/last_win_condition = null // this is a hash
 	var/current_winner = null
 	var/current_loser = null
@@ -90,6 +89,8 @@ var/civmax_research = list(230,230,230)
 	var/list/custom_company = list() //name; percentage; realized (withdrawable) profits
 	var/list/custom_company_nr = list()
 	var/list/custom_company_value = list()
+	var/list/sales_registry = list()
+	var/list/custom_company_colors = list("Global" = list("#000000","#FFFFFF")) //1st color, 2nd color
 	var/is_singlefaction = FALSE
 	//1st value: industrial (crafting, philosophy) 2nd value: military (gunpowder, fencing, archery), 3rd value: health (anatomy, medical), 4th value: leader. 5th value: victory points
 	var/civa_research = list(0,0,0,null,0)
@@ -102,6 +103,7 @@ var/civmax_research = list(230,230,230)
 	var/list/facl = list()
 
 	var/chad_mode = FALSE //Virgins BTFO
+	var/chad_mode_plus = FALSE //SUPER CHAD
 	var/gamemode = "Team Deathmatch"
 	var/research_active = FALSE //if research can be done
 	var/default_research = 0 //the starting research level
@@ -178,6 +180,8 @@ var/civmax_research = list(230,230,230)
 
 	var/list/berryeffects = list(list("neutral","neutral","water"), list("tinto","neutral","water"), list("amar","neutral","water"), list("majo","neutral","water"), list("narco","neutral","water"), list("azul","neutral","water"), list("zelenyy","neutral","water"), list("marron","neutral","water"), list("corcairghorm","neutral","water"))
 
+	var/persistence = FALSE
+
 /obj/map_metadata/New()
 	..()
 	map = src
@@ -185,7 +189,11 @@ var/civmax_research = list(230,230,230)
 	icon_state = null
 	human = faction_organization.Copy()
 	initial_faction_organization = faction_organization.Copy()
-
+/*
+	//export game data (WIP persistence stuff)
+	if (civilizations || nomads)
+		savegame()
+*/
 	// get a subfaction, just one, for this round
 	var/subfaction = null
 	for (var/faction in available_subfactions)
@@ -619,12 +627,12 @@ var/civmax_research = list(230,230,230)
 					current_winner = roundend_condition_def2army(roundend_condition_sides[2][1])
 					current_loser = roundend_condition_def2army(roundend_condition_sides[1][1])
 		else
-			if (current_win_condition != NO_WINNER && current_winner && current_loser)
+			if (current_win_condition != no_winner && current_winner && current_loser)
 				world << "<font size = 3>The [current_winner] has lost control of the [army2name(current_loser)] base!</font>"
 				current_winner = null
 				current_loser = null
 			next_win = -1
-			current_win_condition = NO_WINNER
+			current_win_condition = no_winner
 			win_condition.hash = 0
 		last_win_condition = win_condition.hash
 		return TRUE
@@ -632,7 +640,7 @@ var/civmax_research = list(230,230,230)
 /obj/map_metadata/proc/has_occupied_base(side)
 
 	// hack
-	if (current_win_condition == NO_WINNER)
+	if (current_win_condition == no_winner)
 		return FALSE
 
 	var/list/soldiers = list(
@@ -667,7 +675,7 @@ var/civmax_research = list(230,230,230)
 		if (!job)
 			continue
 
-		if (H.stat != DEAD && H.stat != UNCONSCIOUS && !H.restrained() && ((H.weakened+H.stunned) == 0) && H.client)
+		if (H.stat != DEAD && H.stat != UNCONSCIOUS && !H.restrained() && ((H.weakened+H.stunned) == 0) && H.client && roundend_condition_sides.len >= 2)
 			if (job.base_type_flag() in soldiers)
 				var/H_area = get_area(H)
 				if (job.base_type_flag() in roundend_condition_sides[1])
@@ -837,4 +845,165 @@ var/civmax_research = list(230,230,230)
 /obj/map_metadata/proc/special_relocate(var/mob/M)
 	return FALSE
 
-#undef NO_WINNER
+/////////////////////////////////SEASONS//////////////////////////
+/obj/map_metadata/proc/seasons()
+	if (season == "FALL")
+		season = "WINTER"
+		world << "<big>The <b>Winter</b> has started. In the hot climates, the wet season has started.</big>"
+		change_weather_somehow()
+		spawn(1200)
+			for (var/obj/structure/wild/tree/live_tree/TREES in world)
+				TREES.change_season()
+		for (var/turf/floor/dirt/flooded/D)
+			D.ChangeTurf(/turf/floor/beach/water/flooded)
+		for (var/turf/floor/dirt/ploughed/flooded/D in get_area_turfs(/area/caribbean/nomads/forest/Jungle))
+			D.ChangeTurf(/turf/floor/beach/water/flooded)
+		for (var/turf/floor/dirt/ploughed/flooded/D2 in get_area_turfs(/area/caribbean/nomads/forest/savanna))
+			D2.ChangeTurf(/turf/floor/beach/water/flooded)
+		for(var/obj/structure/sink/S)
+			if (istype(S, /obj/structure/sink/well) || istype(S, /obj/structure/sink/puddle))
+				S.dry = FALSE
+				S.update_icon()
+		for (var/turf/floor/beach/drywater/B in get_area_turfs(/area/caribbean/nomads/desert))
+			B.ChangeTurf(/turf/floor/beach/water/swamp)
+		for (var/turf/floor/beach/drywater2/C in get_area_turfs(/area/caribbean/nomads/desert))
+			C.ChangeTurf(/turf/floor/beach/water/deep/swamp)
+		for (var/turf/floor/dirt/jungledirt/JD in get_area_turfs(/area/caribbean/nomads/forest/Jungle))
+			if (prob(50))
+				JD.ChangeTurf(/turf/floor/grass/jungle)
+		for (var/turf/floor/dirt/jungledirt/JD2 in get_area_turfs(/area/caribbean/nomads/forest/savanna))
+			if (prob(50))
+				JD2.ChangeTurf(/turf/floor/grass/jungle)
+		for (var/turf/floor/dirt/burned/BD in get_area_turfs(/area/caribbean/nomads/desert))
+			if (prob(75))
+				BD.ChangeTurf(/turf/floor/dirt)
+		for (var/turf/floor/dirt/burned/BDD in get_area_turfs(/area/caribbean/nomads/forest/Jungle))
+			if (prob(75))
+				BDD.ChangeTurf(/turf/floor/dirt/jungledirt)
+		for (var/turf/floor/dirt/burned/BDD2 in get_area_turfs(/area/caribbean/nomads/forest/savanna))
+			if (prob(75))
+				BDD2.ChangeTurf(/turf/floor/dirt/jungledirt)
+		for (var/turf/floor/dirt/DT in get_area_turfs(/area/caribbean/nomads/forest))
+			if (!istype(DT, /turf/floor/dirt/underground))
+				if (get_area(DT).climate == "temperate")
+					if (prob(75))
+						DT.ChangeTurf(/turf/floor/dirt/winter)
+				else if (get_area(DT).climate == "tundra" || get_area(DT).climate == "taiga")
+					DT.ChangeTurf(/turf/floor/dirt/winter)
+		for (var/turf/floor/grass/GT in get_area_turfs(/area/caribbean/nomads/forest))
+			if (get_area(GT).climate == "temperate")
+				if (prob(80))
+					GT.ChangeTurf(/turf/floor/winter/grass)
+			else if (get_area(GT).climate == "tundra" || get_area(GT).climate == "taiga")
+				GT.ChangeTurf(/turf/floor/winter/grass)
+		for (var/turf/floor/dirt/DTT in get_area_turfs(/area/caribbean/nomads/snow))
+			if (!istype(DTT, /turf/floor/dirt/underground))
+				DTT.ChangeTurf(/turf/floor/dirt/winter)
+		for (var/turf/floor/grass/GTT in get_area_turfs(/area/caribbean/nomads/snow))
+			GTT.ChangeTurf(/turf/floor/winter/grass)
+
+	else if (season == "SPRING")
+		season = "SUMMER"
+		world << "<big>The <b>Summer</b> has started. In the hot climates, the dry season has started.</big>"
+		change_weather_somehow()
+		spawn(300)
+			for (var/obj/structure/wild/tree/live_tree/TREES in world)
+				TREES.change_season()
+		for(var/obj/structure/sink/S in get_area_turfs(/area/caribbean/nomads/desert))
+			if (istype(S, /obj/structure/sink/well) || istype(S, /obj/structure/sink/puddle))
+				S.dry = TRUE
+				S.update_icon()
+		for (var/turf/floor/beach/water/swamp/D in get_area_turfs(/area/caribbean/nomads/desert))
+			if (D.z > 1)
+				D.ChangeTurf(/turf/floor/beach/drywater)
+		for (var/turf/floor/beach/water/deep/swamp/DS in get_area_turfs(/area/caribbean/nomads/desert))
+			if (DS.z > 1)
+				DS.ChangeTurf(/turf/floor/beach/drywater2)
+		for (var/turf/floor/beach/water/flooded/DF in get_area_turfs(/area/caribbean/nomads/forest/Jungle))
+			if (DF.z > 1)
+				DF.ChangeTurf(/turf/floor/dirt/flooded)
+		for (var/turf/floor/beach/water/flooded/DF2 in get_area_turfs(/area/caribbean/nomads/forest/savanna))
+			if (DF2.z > 1)
+				DF2.ChangeTurf(/turf/floor/dirt/flooded)
+		for (var/turf/floor/dirt/winter/DT in get_area_turfs(/area/caribbean/nomads/forest))
+			if (get_area(DT).climate == "temperate")
+				DT.ChangeTurf(/turf/floor/dirt)
+		for (var/turf/floor/winter/grass/GT in get_area_turfs(/area/caribbean/nomads/forest))
+			if (get_area(GT).climate == "temperate")
+				GT.ChangeTurf(/turf/floor/grass)
+	else if (season == "WINTER")
+		season = "SPRING"
+		world << "<big>The weather is getting warmer. It is now <b>Spring</b>. In the hot climates, the wet season continues.</big>"
+		spawn(900)
+			for (var/obj/structure/wild/tree/live_tree/TREES in world)
+				TREES.change_season()
+		for (var/turf/floor/dirt/winter/D in get_area_turfs(/area/caribbean/nomads/forest))
+			if (get_area(D).climate == "temperate")
+				if (prob(60))
+					D.ChangeTurf(/turf/floor/dirt)
+		for (var/turf/floor/winter/grass/G in get_area_turfs(/area/caribbean/nomads/forest))
+			if (get_area(G).climate == "temperate")
+				if (prob(60))
+					G.ChangeTurf(/turf/floor/grass)
+		spawn(150)
+			change_weather(WEATHER_NONE)
+			for (var/obj/structure/window/snowwall/SW1 in world)
+				if (get_area(get_turf(SW1)).climate != "tundra" && get_area(get_turf(SW1)).climate != "taiga")
+					if (prob(60))
+						qdel(SW1)
+			for (var/obj/covers/snow_wall/SW2 in world)
+				if (get_area(get_turf(SW2)).climate != "tundra" && get_area(get_turf(SW2)).climate != "taiga")
+					if (prob(60))
+						qdel(SW2)
+			for (var/obj/item/weapon/snowwall/SW3 in world)
+				if (get_area(get_turf(SW3)).climate != "tundra" && get_area(get_turf(SW3)).climate != "taiga")
+					if (prob(60))
+						qdel(SW3)
+		spawn(3000)
+			for (var/turf/floor/dirt/winter/D in get_area_turfs(/area/caribbean/nomads/forest))
+				if (get_area(D).climate == "temperate")
+					D.ChangeTurf(/turf/floor/dirt)
+			for (var/turf/floor/winter/grass/G in get_area_turfs(/area/caribbean/nomads/forest))
+				if (get_area(G).climate == "temperate")
+					G.ChangeTurf(/turf/floor/grass)
+			for (var/obj/structure/window/snowwall/SW1 in world)
+				if (get_area(get_turf(SW1)).climate != "tundra" && get_area(get_turf(SW1)).climate != "taiga")
+					qdel(SW1)
+			for (var/obj/covers/snow_wall/SW2 in world)
+				if (get_area(get_turf(SW2)).climate != "tundra" && get_area(get_turf(SW2)).climate != "taiga")
+					qdel(SW2)
+			for (var/obj/item/weapon/snowwall/SW3 in world)
+				if (get_area(get_turf(SW3)).climate != "tundra" && get_area(get_turf(SW3)).climate != "taiga")
+					qdel(SW3)
+	else if (season == "SUMMER")
+		season = "FALL"
+		world << "<big>The leaves start to fall and the weather gets colder. It is now <b>Fall</b>. In the hot climates, the dry season continues.</big>"
+		spawn(900)
+			for (var/obj/structure/wild/tree/live_tree/TREES in world)
+				TREES.change_season()
+		for (var/turf/floor/dirt/burned/BD)
+			BD.ChangeTurf(/turf/floor/dirt)
+		for (var/turf/floor/grass/G)
+			G.update_icon()
+		spawn(100)
+			change_weather(WEATHER_RAIN)
+		spawn(15000)
+			change_weather(WEATHER_SNOW)
+			for (var/turf/floor/dirt/D in get_area_turfs(/area/caribbean/nomads/forest))
+				if (z == world.maxz && prob(40) && !istype(D, /turf/floor/dirt/underground) && !istype(D, /turf/floor/dirt/dust))
+					D.ChangeTurf(/turf/floor/dirt/winter)
+			for (var/turf/floor/grass/G in get_area_turfs(/area/caribbean/nomads/forest))
+				if (get_area(G).climate == "temperate")
+					if (prob(40))
+						G.ChangeTurf(/turf/floor/winter/grass)
+			spawn(1200)
+				for (var/turf/floor/dirt/D in get_area_turfs(/area/caribbean/nomads/forest))
+					if (!istype(D,/turf/floor/dirt/winter) && (get_area(D).climate == "temperate"))
+						if (D.z == world.maxz && prob(50) && !istype(D,/turf/floor/dirt/underground))
+							D.ChangeTurf(/turf/floor/dirt/winter)
+				for (var/turf/floor/grass/G in get_area_turfs(/area/caribbean/nomads/forest))
+					if (get_area(G).climate == "temperate")
+						if (prob(50))
+							G.ChangeTurf(/turf/floor/winter/grass)
+	spawn(18000)
+		seasons()

@@ -16,7 +16,14 @@
 	counter = 2
 	anchored = TRUE
 	species = "salmon"
-
+/obj/structure/fish/cod
+	name = "codfish"
+	desc = "Seems like theres some cod's around here..."
+	icon = 'icons/mob/fish.dmi'
+	icon_state = "cod"
+	counter = 1
+	anchored = TRUE
+	species = "cod"
 /obj/structure/fish/attackby(var/obj/item/stack/W as obj, var/mob/living/carbon/human/H as mob)
 	if (istype(W, /obj/item/weapon/fishing) && counter > 0)
 		H.visible_message("[H] starts fishing.")
@@ -27,6 +34,8 @@
 					counter = (counter-1)
 					if (species == "salmon")
 						new/obj/item/weapon/reagent_containers/food/snacks/rawfish/salmon(H.loc)
+					else if (species == "cod")
+						new/obj/item/weapon/reagent_containers/food/snacks/rawfish/cod(H.loc)
 					else
 						new/obj/item/weapon/reagent_containers/food/snacks/rawfish(H.loc)
 					if (counter <= 0)
@@ -43,6 +52,8 @@
 					counter = (counter-1)
 					if (species == "salmon")
 						new/obj/item/weapon/reagent_containers/food/snacks/rawfish/salmon(H.loc)
+					else if (species == "cod")
+						new/obj/item/weapon/reagent_containers/food/snacks/rawfish/cod(H.loc)
 					else
 						new/obj/item/weapon/reagent_containers/food/snacks/rawfish(H.loc)
 					if (counter <= 0)
@@ -72,7 +83,7 @@
 	..()
 	invisibility = 101
 
-/obj/structure/piranha/Crossed(mob/M as mob)
+/obj/structure/piranha/Crossed(M as mob|obj)
 	for (var/obj/covers/CV in src.loc)
 		if (CV.is_cover == TRUE)
 			return
@@ -81,6 +92,8 @@
 	if (istype(M, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = M
 		if (H.driver_vehicle)
+			return
+		if (H.riding && H.riding_mob)
 			return
 		invisibility = 0
 		visible_message("<span class='notice'>The piranhas swarm [M]!</span>")
@@ -114,6 +127,13 @@
 			spawn(300)
 				invisibility = 101
 			return
+	else if (istype(M, /obj/item/weapon/reagent_containers/food/snacks/meat))
+		invisibility = 0
+		visible_message("<span class='notice'>The piranhas devour the [M]!</span>")
+		qdel(M)
+		spawn(300)
+			invisibility = 101
+		return
 	else
 		return
 

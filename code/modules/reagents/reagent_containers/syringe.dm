@@ -11,7 +11,6 @@
 	icon = 'icons/obj/syringe.dmi'
 	item_state = "syringe_0"
 	icon_state = "0"
-	matter = list("glass" = 150)
 	amount_per_transfer_from_this = 5
 	possible_transfer_amounts = null
 	volume = 15
@@ -67,7 +66,7 @@
 			user << "<span class='warning'>This syringe is broken!</span>"
 			return
 
-	/*	if (user.a_intent == I_HURT && ismob(target))
+	/*	if (user.a_intent == I_HARM && ismob(target))
 			if ((CLUMSY in user.mutations) && prob(50))
 				target = user
 			syringestab(target, user)
@@ -175,8 +174,8 @@
 
 					user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
 					user.do_attack_animation(target)
-
-					if (do_after(user, injtime, target.loc))
+					var/turf/tloc = target.loc
+					if (do_after(user, injtime, tloc))
 						user.visible_message("<span class='warning'>[user] injects [target] with the syringe!</span>")
 					else
 						return

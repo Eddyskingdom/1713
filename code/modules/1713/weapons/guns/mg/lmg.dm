@@ -6,7 +6,7 @@
 	equiptimer = 22
 	load_delay = 12
 	gun_safety = TRUE
-	slowdown = 0.6
+	slowdown = 0.4
 	// not accurate at all
 	accuracy_list = list(
 
@@ -56,7 +56,7 @@
 	accuracy_increase_mod = 1.00
 	accuracy_decrease_mod = 2.00
 	KD_chance = KD_CHANCE_MEDIUM
-	stat = "mg"
+	stat = "machinegun"
 	w_class = 5
 	heavy = TRUE
 	load_method = MAGAZINE
@@ -115,7 +115,8 @@
 	weight = 9.12
 	force = 20
 	throwforce = 30
-
+	attachment_slots = ATTACH_IRONSIGHTS|ATTACH_SCOPE|ATTACH_BARREL
+	slowdown = 0.2
 
 /obj/item/weapon/gun/projectile/automatic/dp28
 	name = "DP28 light machine gun"

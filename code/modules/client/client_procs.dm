@@ -40,14 +40,9 @@
 		cmd_admin_pm(C,null)
 		return
 
-	if (href_list["irc_msg"])
-		if (!holder && received_irc_pm < world.time - 6000) //Worse they can do is spam IRC for 10 minutes
-			usr << "<span class='warning'>You are no longer able to use this, it's been more then 10 minutes since an admin on IRC has responded to you</span>"
-			return
-		if (mute_irc)
-			usr << "<span class='warning'You cannot use this as your client has been muted from sending messages to the admins on IRC</span>"
-			return
-		cmd_admin_irc_pm(href_list["irc_msg"])
+	if (href_list["priv_msg_discord"])
+		var/txtinput = input("Write your reply to [pm_sender]:") as text
+		cmd_admin_pm_todiscord(pm_sender,txtinput)
 		return
 
 	// see quickBan.dm
@@ -61,39 +56,26 @@
 				var/cID = href_list["quickBan_removeBan_cID"]
 				var/ip = href_list["quickBan_removeBan_ip"]
 
-				var/ckey_file = null
-				var/ip_file = null
-				var/cid_file = null
+				var/bans_file = null
 
-				if (fexists("SQL/bans/ckey/[ckey].txt"))
-					ckey_file = "SQL/bans/ckey/[ckey].txt"
-				if (fexists("SQL/bans/ip/[ckey].txt"))
-					ip_file = "SQL/bans/ip/[ckey].txt"
-				if (fexists("SQL/bans/cid/[ckey].txt"))
-					cid_file = "SQL/bans/cid/[ckey].txt"
-
-				if (ckey_file || ip_file || cid_file)
+				if (fexists("SQL/bans.txt"))
+					bans_file = "SQL/bans.txt"
+				if (bans_file)
+					var/details = file2text(bans_file)
+					var/list/details_lines = splittext(details, "|||\n")
+					if (details_lines.len)
+						for(var/i=1,i<=details_lines.len,i++)
+							var/list/details2 = splittext(details_lines[i], ";")
+							if (details2.len>=11 && details2[3] == UID)
+								details_lines -= details_lines[i]
+								fdel(bans_file)
+								for(var/L in details_lines)
+									text2file("[L]|||", bans_file)
 					log_admin("[key_name(caller)] removed a ban for '[UID]/[ckey]/[cID]/[ip]'.")
 					message_admins("[key_name(caller)] removed a ban for '[UID]/[ckey]/[cID]/[ip]'.")
-					if (ckey_file)
-						fdel(ckey_file)
-					if (cid_file)
-						fdel(cid_file)
-					if (ip_file)
-						fdel(ip_file)
-				var/list/fulllist = list()
-				var/path = "SQL/bans/"
-				var/list/filenames = flist(path)
-				for (var/filename in filenames)
-					if (copytext(filename, length(filename)) != "/") // Ignore directories.
-						if (fexists(path + filename))
-							fulllist += "[path + filename]"
-				for (var/k in fulllist)
-					if (fexists(k))
-						var/list/re = splittext(file2text(k),";")
-						if (re[3] == UID)
-							fdel(k)
-
+					for (var/client/C in clients)
+						if (C.ckey == ckey)
+							C << "<span class = 'good'>href_list["Your ban has been lifted."]</span>"
 	//Logs all hrefs
 	if (config && config.log_hrefs && href_logfile)
 		href_logfile << "<small>[time2text(world.timeofday,"hh:mm")] [src] (usr:[usr])</small> || [hsrc ? "[hsrc] " : ""][href]<br>"
@@ -343,9 +325,7 @@
 		if (directory[ckey])
 			A.associate(directory[ckey])
 
-#undef TOPIC_SPAM_DELAY
 #undef UPLOAD_LIMIT
-#undef MIN_CLIENT_VERSION
 
 //checks if a client is afk
 //3000 frames = 5 minutes

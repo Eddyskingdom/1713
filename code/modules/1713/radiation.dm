@@ -88,7 +88,7 @@
 	update_icon()
 	return
 
-/obj/obj/structure/sink/rad_act(amount)
+/obj/structure/sink/rad_act(amount)
 	if(amount <= 0)
 		return
 	radiation += amount
@@ -102,6 +102,8 @@
 
 /mob/living/carbon/human/rad_act(amount)
 	if(amount <= 0)
+		return
+	if (inducedSSD)
 		return
 	for (var/obj/item/organ/external/sorgan in organs)
 		var/blocked = getarmor_rad(sorgan.name)

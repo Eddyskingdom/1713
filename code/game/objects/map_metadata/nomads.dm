@@ -1,8 +1,9 @@
-#define NO_WINNER "The round is proceeding normally."
+
 /obj/map_metadata/nomads
 	ID = MAP_NOMADS
 	title = "Nomads (Temperate) (155x155x2)"
 	lobby_icon_state = "civ13"
+	no_winner ="The round is proceeding normally."
 	caribbean_blocking_area_types = list(/area/caribbean/no_mans_land/invisible_wall/)
 	respawn_delay = 6000 // 10 minutes!
 	squad_spawn_locations = FALSE
@@ -42,7 +43,7 @@
 /obj/map_metadata/nomads/cross_message(faction)
 	return ""
 
-/obj/map_metadata/nomads/proc/seasons()
+/obj/map_metadata/nomads/seasons()
 	if (season == "WINTER")
 		season = "SPRING"
 		world << "<big>The weather is getting warmer. It is now <b>Spring</b>.</big>"
@@ -167,4 +168,3 @@
 		. = TRUE
 	else
 		. = FALSE
-#undef NO_WINNER

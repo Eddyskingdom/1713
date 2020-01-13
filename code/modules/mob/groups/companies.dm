@@ -23,7 +23,7 @@
 	if (!ishuman(src))
 		return
 	var/mob/living/carbon/human/H = src
-	for(var/i = 1, i <= map.custom_faction_nr.len, i++)
+	for(var/i = 1, i <= map.custom_company_nr.len, i++)
 		if (map.custom_company_nr[i] == newname || newname == "Global")
 			usr << "<span class='danger'>That company already exists. Choose another name.</span>"
 			return
@@ -68,6 +68,7 @@
 		map.custom_company_nr += newname
 		var/list/newnamev = list("[newname]" = list(list(H,100,0)))
 		map.custom_company += newnamev
+		map.custom_company_colors += list("[newname]" = list(choosecolor1,choosecolor2))
 		usr << "<big>You now own <b>100%</b> of the new company [newname].</big>"
 		return
 	else
@@ -137,8 +138,54 @@
 	if (!map || !H || !company)
 		return FALSE
 
+	if (company == "Global")
+		return FALSE
+
+	if (!map.custom_company[company] || !map.custom_company[company].len)
+		return FALSE
+
 	for(var/i=1,i<=map.custom_company[company].len,i++)
 		if (map.custom_company[company][i][1] == H)
 			return TRUE
 
 	return FALSE
+
+//for automated transfers e.g. stock market
+/mob/living/carbon/human/proc/transfer_stock_proc(var/companyname, var/stock, var/mob/living/carbon/human/target)
+	if (!companyname || !stock || !target)
+		return
+
+	for(var/l=1, l <= map.custom_company[companyname].len, l++)
+		if (map.custom_company[companyname][l][1] == src)
+			var/currb = map.custom_company[companyname][l][2]
+			map.custom_company[companyname][l][2] = currb-stock
+
+	for(var/l=1,  l <= map.custom_company[companyname].len, l++)
+		if (map.custom_company[companyname][l][1] == target)
+			var/currb = map.custom_company[companyname][l][2]
+			map.custom_company[companyname][l][2] = currb+stock
+			return
+	map.custom_company[companyname] += list(list(target,stock,0))
+	src << "<big>Transfered [stock]% of [companyname] to [target].</big>"
+	target << "<big>You received [stock]% of [companyname] from [src].</big>"
+	return
+
+//to be used when the seller does not exist (normally if he died and theres no body)
+//the stock is still for sale but "nobody" will receive the cost.
+/proc/transfer_stock_nomob(var/companyname, var/stock, var/mob/living/carbon/human/target)
+	if (!companyname || !stock || !target)
+		return
+
+	for(var/l=1, l <= map.custom_company[companyname].len, l++)
+		if (map.custom_company[companyname][l][1] == null)
+			var/currb = map.custom_company[companyname][l][2]
+			map.custom_company[companyname][l][2] = currb-stock
+
+	for(var/l=1,  l <= map.custom_company[companyname].len, l++)
+		if (map.custom_company[companyname][l][1] == target)
+			var/currb = map.custom_company[companyname][l][2]
+			map.custom_company[companyname][l][2] = currb+stock
+			return
+	map.custom_company[companyname] += list(list(target,stock,0))
+	target << "<big>You received [stock]% of [companyname] from the stock market.</big>"
+	return

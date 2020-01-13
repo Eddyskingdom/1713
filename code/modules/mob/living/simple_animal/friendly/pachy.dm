@@ -22,6 +22,9 @@
 	health = 140
 	mob_size = MOB_LARGE
 	layer = 3.99
-	a_intent = I_HURT
+	a_intent = I_HARM
 	can_ride = TRUE
+	behaviour = "defends"
 
+	melee_damage_lower = 10
+	melee_damage_upper = 16

@@ -63,6 +63,13 @@
 	projectile_type = /obj/item/projectile/arrow/arrow/stone
 	weight = 0.17
 
+/obj/item/ammo_casing/arrow/sandstone
+	name = "sandstone arrow"
+	desc = "An arrow with a sandstone tip."
+	icon_state = "arrow_sandstone"
+	projectile_type = /obj/item/projectile/arrow/arrow/sandstone
+	weight = 0.17
+
 /obj/item/ammo_casing/arrow/copper
 	name = "copper arrow"
 	desc = "An arrow with a copper tip."
@@ -105,7 +112,83 @@
 	projectile_type = /obj/item/projectile/arrow/arrow/vial
 	weight = 0.18
 	volume = 15
+//Crossbow
 
+/obj/item/ammo_casing/bolt
+	name = "bolt shaft"
+	desc = "A tipless crossbow bolt, not very effective."
+	icon = 'icons/obj/weapons.dmi'
+	icon_state = "bolt"
+	spent_icon = null
+	projectile_type = /obj/item/projectile/arrow/bolt
+	weight = 0.17
+	caliber = "bolt"
+	slot_flags = SLOT_BELT
+	value = 2
+	var/volume = 5
+
+/obj/item/ammo_casing/bolt/stone
+	name = "stone bolt"
+	desc = "An bolt with a stone tip."
+	icon_state = "bolt_stone"
+	projectile_type = /obj/item/projectile/arrow/bolt/stone
+	weight = 0.17
+
+/obj/item/ammo_casing/bolt/sandstone
+	name = "sandstone bolt"
+	desc = "An bolt with a sandstone tip."
+	icon_state = "bolt_sandstone"
+	projectile_type = /obj/item/projectile/arrow/bolt/sandstone
+	weight = 0.17
+
+/obj/item/ammo_casing/bolt/copper
+	name = "copper bolt"
+	desc = "An bolt with a copper tip."
+	icon_state = "bolt_copper"
+	projectile_type = /obj/item/projectile/arrow/bolt/copper
+	weight = 0.16
+/obj/item/ammo_casing/bolt/gods
+	name = "gods finger"
+	desc = "A bolt that radiates holy wrath."
+	icon = 'icons/obj/weapons.dmi'
+	icon_state = "bolt_god"
+	projectile_type = /obj/item/projectile/arrow/bolt/fire/gods
+	weight = 0.18
+
+/obj/item/ammo_casing/bolt/iron
+	name = "iron bolt"
+	desc = "A crossbow bolt with a iron tip."
+	icon_state = "bolt_iron"
+	projectile_type = /obj/item/projectile/arrow/bolt/iron
+	weight = 0.17
+
+/obj/item/ammo_casing/bolt/bronze
+	name = "bronze bolt"
+	desc = "A crossbow bolt with a bronze tip."
+	icon_state = "bolt_bronze"
+	projectile_type = /obj/item/projectile/arrow/bolt/bronze
+	weight = 0.17
+
+/obj/item/ammo_casing/bolt/steel
+	name = "steel bolt"
+	desc = "A crossbow bolt with a steel tip."
+	icon_state = "bolt_steel"
+	projectile_type = /obj/item/projectile/arrow/bolt/steel
+	weight = 0.18
+
+/obj/item/ammo_casing/bolt/modern
+	name = "fiberglass bolt"
+	desc = "A modern, high-velocity crossbow bolt."
+	icon_state = "bolt_modern"
+	projectile_type = /obj/item/projectile/arrow/bolt/modern
+	weight = 0.16
+/obj/item/ammo_casing/bolt/vial
+	name = "vial arrow"
+	desc = "An iron-tipped bolt with a glass vial attached to the tip."
+	icon_state = "bolt_vial"
+	projectile_type = /obj/item/projectile/arrow/bolt/vial
+	weight = 0.18
+	volume = 15
  //Sling
 /obj/item/ammo_casing/stone
 	name = "rock"
@@ -122,6 +205,7 @@
 
 /obj/item/ammo_casing/arrow/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/stack/arrowhead))
+		var/obj/item/stack/arrowhead/AH = W
 		if(istype(W, /obj/item/stack/arrowhead/stone))
 			new/obj/item/ammo_casing/arrow/stone(user.loc)
 		else if(istype(W, /obj/item/stack/arrowhead/copper))
@@ -136,9 +220,11 @@
 			new/obj/item/ammo_casing/arrow/vial(user.loc)
 		else
 			new/obj/item/ammo_casing/arrow/gods(user.loc)
+		AH.amount--
+		if (AH.amount<1)
+			qdel(AH)
 		playsound(loc, 'sound/machines/click.ogg', 25, TRUE)
 		user << "<span class = 'notice'>You attach the [W] to the [src]</span>"
-		qdel(W)
 		qdel(src)
 	if (istype(W, /obj/item/weapon/reagent_containers))
 		return //do nothing if not reagent container
@@ -147,6 +233,38 @@
 			user << "<span class = 'notice'>You dip the [W] into the [src]</span>"
 			W.reagents.trans_to_obj(src, volume - src.reagents)
 	..()
+
+/obj/item/ammo_casing/bolt/attackby(obj/item/W as obj, mob/user as mob)
+	if(istype(W, /obj/item/stack/arrowhead))
+		var/obj/item/stack/arrowhead/AH = W
+		if(istype(W, /obj/item/stack/arrowhead/stone))
+			new/obj/item/ammo_casing/bolt/stone(user.loc)
+		else if(istype(W, /obj/item/stack/arrowhead/copper))
+			new/obj/item/ammo_casing/bolt/copper(user.loc)
+		else if(istype(W, /obj/item/stack/arrowhead/iron))
+			new/obj/item/ammo_casing/bolt/iron(user.loc)
+		else if(istype(W, /obj/item/stack/arrowhead/bronze))
+			new/obj/item/ammo_casing/bolt/bronze(user.loc)
+		else if(istype(W, /obj/item/stack/arrowhead/steel))
+			new/obj/item/ammo_casing/bolt/steel(user.loc)
+		else if(istype(W, /obj/item/stack/arrowhead/vial))
+			new/obj/item/ammo_casing/bolt/vial(user.loc)
+		else
+			new/obj/item/ammo_casing/bolt/gods(user.loc)
+		AH.amount--
+		if (AH.amount<1)
+			qdel(AH)
+		playsound(loc, 'sound/machines/click.ogg', 25, TRUE)
+		user << "<span class = 'notice'>You attach the [W] to the [src]</span>"
+		qdel(src)
+	if (istype(W, /obj/item/weapon/reagent_containers))
+		return //do nothing if not reagent container
+	else
+		if(volume < src.reagents)
+			user << "<span class = 'notice'>You dip the [W] into the [src]</span>"
+			W.reagents.trans_to_obj(src, volume - src.reagents)
+	..()
+
 
 /obj/item/stack/arrowhead
 	name = "god's finger"
@@ -409,6 +527,16 @@
 	caliber = "a41"
 	value = 7
 
+/obj/item/ammo_casing/a50cal
+	name = ".50 caliber bullet"
+	desc = "A brass casing."
+	icon_state = "pistol_bullet_anykind"
+	spent_icon = "pistolcasing"
+	weight = 0.04
+	projectile_type = /obj/item/projectile/bullet/rifle/a50cal
+	caliber = "a50cal"
+	value = 7
+
 /obj/item/ammo_casing/a32
 	name = ".32 bullet"
 	desc = "A brass casing."
@@ -417,6 +545,16 @@
 	weight = 0.04
 	projectile_type = /obj/item/projectile/bullet/pistol/a32
 	caliber = "a32"
+	value = 5
+
+/obj/item/ammo_casing/a38
+	name = ".38 bullet"
+	desc = "A brass casing."
+	icon_state = "pistol_bullet_anykind"
+	spent_icon = "pistolcasing"
+	weight = 0.04
+	projectile_type = /obj/item/projectile/bullet/pistol/a38
+	caliber = "a38"
 	value = 5
 
 /obj/item/ammo_casing/a45
@@ -457,6 +595,16 @@
 	weight = 0.08
 	projectile_type = /obj/item/projectile/bullet/rifle/a44
 	caliber = "a44"
+	value = 8
+
+/obj/item/ammo_casing/a44magnum
+	name = ".44 magnum bullet"
+	desc = "A brass casing."
+	icon_state = "pistol_bullet_anykind"
+	spent_icon = "pistolcasing"
+	weight = 0.08
+	projectile_type = /obj/item/projectile/bullet/rifle/a44magnum
+	caliber = "a44magnum"
 	value = 8
 
 /obj/item/ammo_casing/a4570
@@ -523,9 +671,15 @@
 	caliber = "a77x58"
 	value = 8
 
-/obj/item/ammo_casing/a77x58/weak
-	projectile_type = /obj/item/projectile/bullet/rifle/a77x58/weak
-	caliber = "a77x58_weak"
+/obj/item/ammo_casing/a77x58_wood
+	name = "7.7x58mm bullet"
+	desc = "A brass casing."
+	icon_state = "kclip-bullet"
+	spent_icon = "kclip-casing"
+	weight = 0.076
+	projectile_type = /obj/item/projectile/bullet/rifle/a77x58_wood
+	caliber = "a77x58_wood"
+	value = 6
 
 /obj/item/ammo_casing/a577
 	name = ".577/450 Martini-Henry bullet"
@@ -658,6 +812,26 @@
 	weight = 0.04
 	projectile_type = /obj/item/projectile/bullet/rifle/a545x39
 	caliber = "a545x39"
+	value = 2
+
+/obj/item/ammo_casing/a32acp
+	name = ".32 ACP bullet"
+	desc = "A brass casing."
+	icon_state = "pistol_bullet_anykind"
+	spent_icon = "pistolcasing"
+	weight = 0.03
+	projectile_type = /obj/item/projectile/bullet/pistol/a32acp
+	caliber = "a32acp"
+	value = 2
+
+/obj/item/ammo_casing/webly445
+	name = ".455 webly bullet"
+	desc = "A brass casing."
+	icon_state = "pistol_bullet_anykind"
+	spent_icon = "pistolcasing"
+	weight = 0.03
+	projectile_type = /obj/item/projectile/bullet/pistol/webly445
+	caliber = "webly445"
 	value = 2
 
 /obj/item/ammo_casing/a556x45

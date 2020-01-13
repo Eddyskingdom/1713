@@ -1,8 +1,3 @@
-//copy pasta of the space piano, don't hurt me -Pete
-
-#define MAX_CHARS_PER_LINE 200
-#define MAX_CHARS_TOTAL 20000
-
 /obj/item/violin
 	name = "Violin"
 	desc = "A classic violin. "
@@ -373,7 +368,7 @@
 				var/tempo = 5
 				if (!lines || !lines.len)
 					return
-				if (copytext(lines[1],1,6) == "BPM: ")
+				if (copytext(lines[1],1,6) == "BPM: " && text2num(copytext(lines[1],6)))
 					tempo = 600 / text2num(copytext(lines[1],6))
 					lines.Cut(1,2)
 				if (lines.len > MAX_CHARS_PER_LINE)

@@ -61,6 +61,14 @@
 				fuel += I.amount*3
 				qdel(I)
 				return
+			else if (istype(I, /obj/item/stack/ore/charcoal))
+				fuel += I.amount*1
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/weapon/branch))
+				fuel += I.amount*1
+				qdel(I)
+				return
 			else if (istype(I, /obj/item/stack/ore/iron) || istype(I, /obj/item/stack/material/iron))
 				iron += I.amount
 				qdel(I)
@@ -242,19 +250,42 @@
 			else if (istype(I, /obj/item/stack/ore/coal))      //FUEL 3
 				fuel += I.amount*3
 				qdel(I)
-				return                  //INPUT 1                                   //OUTPUT1
-			else if (istype(I, /obj/item/stack/money/goldcoin) || istype(I, /obj/item/stack/material/gold))
+				return                  //INPUT 1
+			else if (istype(I, /obj/item/stack/ore/charcoal))      //FUEL 3
+				fuel += I.amount*1
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/weapon/branch))
+				fuel += I.amount*1
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/stack/money/goldcoin))
+				gold += I.amount/50
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/stack/material/gold))
 				gold += I.amount
 				qdel(I)
-				return                  //INPUT 2                                  //OUTPUT 2
-			else if (istype(I, /obj/item/stack/money/coppercoin) || istype(I, /obj/item/stack/material/copper))
+				return
+
+			else if (istype(I, /obj/item/stack/money/coppercoin))
+				copper += I.amount/50
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/stack/material/copper))
 				copper += I.amount
 				qdel(I)
-				return                   //INPUT 3                                   //OUTPUT3
-			else if (istype(I, /obj/item/stack/money/silvercoin) || istype(I, /obj/item/stack/material/silver))
+				return
+
+			else if (istype(I, /obj/item/stack/money/silvercoin))
+				silver += I.amount/100
+				qdel(I)
+				return
+			else if (istype(I, /obj/item/stack/material/silver))
 				silver += I.amount
 				qdel(I)
 				return
+
 			else
 				H << "<span class = 'warning'>You can't smelt this.</span>"
 				return

@@ -210,8 +210,20 @@
 	climate = "sea"
 
 /area/caribbean/island/river
-	base_turf = /turf/floor/beach/water/shallowsaltwater
+	base_turf = /turf/floor/beach/water
 	icon_state = "red1"
+
+/area/caribbean/island/tropical
+	name = "Island"
+	base_turf = /turf/floor/beach/sand
+	icon_state = "red3"
+	ambience = list("sound/ambience/jungle1.ogg")
+	climate = "jungle"
+
+/area/caribbean/island/river/tropical
+	base_turf = /turf/floor/beach/water
+	icon_state = "red1"
+	climate = "jungle"
 
 /area/caribbean/sea
 	name = "Island"
@@ -239,6 +251,21 @@
 	name = "No Man's Land"
 	icon_state = "purple1"
 	base_turf = /turf/floor/dirt
+
+/area/caribbean/no_mans_land/capturable
+	base_turf = /turf/floor/dirt/burned
+	icon_state = "red4"
+	location = AREA_INSIDE
+
+/area/caribbean/no_mans_land/capturable/one
+	name = "Telephone Central"
+
+/area/caribbean/no_mans_land/capturable/two
+	name = "Train Station"
+
+/area/caribbean/no_mans_land/capturable/three
+	name = "City Hall"
+
 /area/caribbean/no_mans_land/tundra
 	name = "No Man's Land"
 	icon_state = "purple1"
@@ -291,6 +318,9 @@
 /area/caribbean/no_mans_land/invisible_wall/jungle
 	climate = "jungle"
 	base_turf = /turf/floor/dirt/jungledirt
+/area/caribbean/no_mans_land/invisible_wall/sea
+	climate = "sea"
+	base_turf = /turf/floor/beach/water/deep/saltwater
 
 /area/caribbean/no_mans_land/invisible_wall/one
 	icon_state = "green1"

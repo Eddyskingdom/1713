@@ -69,7 +69,7 @@
 		if (istype(user.get_active_hand(),/obj) && istype(user.get_inactive_hand(),/obj))
 			user << "<span class='warning'>You need an empty hand to draw \the [holstered]!</span>"
 		else
-			if (user.a_intent == I_HURT)
+			if (user.a_intent == I_HARM)
 				usr.visible_message(
 					"<span class='danger'>[user] draws \the [holstered], ready to shoot!</span>",
 					"<span class='warning'>You draw \the [holstered], ready to shoot!</span>"
@@ -88,7 +88,7 @@
 		if (istype(user.get_active_hand(),/obj) && istype(user.get_inactive_hand(),/obj))
 			user << "<span class='warning'>You need an empty hand to draw \the [holstered2]!</span>"
 		else
-			if (user.a_intent == I_HURT)
+			if (user.a_intent == I_HARM)
 				usr.visible_message(
 					"<span class='danger'>[user] draws \the [holstered2], ready to shoot!</span>",
 					"<span class='warning'>You draw \the [holstered2], ready to shoot!</span>"
@@ -107,7 +107,7 @@
 		if (istype(user.get_active_hand(),/obj) && istype(user.get_inactive_hand(),/obj))
 			user << "<span class='warning'>You need an empty hand to draw \the [holstered]!</span>"
 		else
-			if (user.a_intent == I_HURT)
+			if (user.a_intent == I_HARM)
 				usr.visible_message(
 					"<span class='danger'>[user] draws \the [holstered], ready to shoot!</span>",
 					"<span class='warning'>You draw \the [holstered], ready to shoot!</span>"
@@ -230,3 +230,8 @@
 	desc = "A double handgun holster slung low on the hip."
 	icon_state = "holster_hip2"
 	capacity = 2
+
+/obj/item/clothing/accessory/holster/tactical
+	name = "hip holster"
+	desc = "A handgun holster slung low on the hip."
+	icon_state = "tacholster"

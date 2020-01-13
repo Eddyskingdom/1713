@@ -34,6 +34,14 @@
 	max_w_class = 3
 	max_storage_space = 28
 
+/obj/item/weapon/storage/belt/security
+	name = "security belt"
+	icon_state = "security"
+	item_state = "security"
+	storage_slots = 9
+	max_w_class = 3
+	max_storage_space = 34
+
 /obj/item/weapon/storage/belt/medical
 	name = "medical belt"
 	can_hold = list(
@@ -72,10 +80,10 @@
 		/obj/item/flashlight,
 		/obj/item/weapon/material/minihoe,
 		/obj/item/weapon/material/hatchet,
-		/obj/item/weapon/material/kunai_normal,
-		/obj/item/weapon/material/throwing_knife,
-		/obj/item/weapon/material/tomahawk,
-		/obj/item/weapon/material/throwing_axe,
+		/obj/item/weapon/material/thrown/kunai_normal,
+		/obj/item/weapon/material/thrown/throwing_knife,
+		/obj/item/weapon/material/thrown/tomahawk,
+		/obj/item/weapon/material/thrown/throwing_axe,
 		)
 
 
@@ -102,10 +110,38 @@
 	storage_slots = 9
 	max_w_class = 2
 
-/obj/item/weapon/storage/belt/leather/farmer
-	..()
 /obj/item/weapon/storage/belt/leather/farmer/New()
 	..()
 	new /obj/item/stack/farming/seeds/tomato(src)
 	new /obj/item/stack/farming/seeds/potato(src)
 	new /obj/item/stack/farming/seeds/hemp(src)
+
+/obj/item/weapon/storage/belt/throwing
+	name = "throwing belt"
+	desc = "A belt made specifically to hold throwing weapons.."
+	icon_state = "belt_satchel"
+	item_state = "belt_holster"
+	storage_slots = 12
+	max_w_class = 1
+	can_hold = list(
+		/obj/item/weapon/material/hatchet,
+		/obj/item/weapon/material/thrown/kunai_normal,
+		/obj/item/weapon/material/thrown/throwing_knife,
+		/obj/item/weapon/material/thrown/tomahawk,
+		/obj/item/weapon/material/thrown/throwing_axe,
+		)
+
+/obj/item/weapon/storage/belt/throwing/ninja/New()
+	..()
+	new /obj/item/weapon/material/thrown/star(src)
+	new /obj/item/weapon/material/thrown/star(src)
+	new /obj/item/weapon/material/thrown/star(src)
+	new /obj/item/weapon/material/thrown/star(src)
+	new /obj/item/weapon/material/thrown/star(src)
+	new /obj/item/weapon/material/thrown/star(src)
+	new /obj/item/weapon/material/thrown/kunai_normal(src)
+	new /obj/item/weapon/material/thrown/kunai_normal(src)
+	new /obj/item/weapon/material/thrown/kunai_normal(src)
+	new /obj/item/weapon/material/thrown/kunai_normal(src)
+	new /obj/item/weapon/material/thrown/kunai_normal(src)
+	new /obj/item/weapon/material/thrown/kunai_normal(src)

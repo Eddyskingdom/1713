@@ -16,6 +16,10 @@
 	desc = "Our glorious Führer!"
 	icon_state = "hitler"
 
+/obj/structure/sign/portrait/lenin
+	name = "Portrait of Lenin"
+	icon_state = "lenin"
+
 /obj/structure/sign/portrait/stalin
 	name = "Portrait of Stalin"
 	icon_state = "stalin"
@@ -23,3 +27,11 @@
 /obj/structure/sign/portrait/hirohito
 	name = "Portrait of Hirohito"
 	icon_state = "hirohito"
+
+/obj/structure/sign/portrait/kinggeorge
+	name = "Portrait of King George V"
+	icon_state = "kinggeorgev"
+
+/obj/structure/sign/portrait/jackgray
+	name = "Portrait of Jack Grayson"
+	icon_state = "jackgray"

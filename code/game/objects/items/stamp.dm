@@ -8,7 +8,6 @@
 	w_class = 1.0
 	throw_speed = 7
 	throw_range = 15
-	matter = list(DEFAULT_WALL_MATERIAL = 60)
 	attack_verb = list("stamped")
 
 /obj/item/weapon/stamp/rn
@@ -30,3 +29,7 @@
 /obj/item/weapon/stamp/nl
 	name = "Dutch Governor seal"
 	icon_state = "stamp-nl"
+
+/obj/item/weapon/stamp/baily
+	name = "Baily approval"
+	icon_state = "stamp-fr"

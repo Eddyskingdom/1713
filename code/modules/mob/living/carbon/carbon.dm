@@ -297,9 +297,9 @@
 				var/obj/item/weapon/reagent_containers/food/drinks/bottle/B = item
 				if (B.rag && B.rag.on_fire)
 					var/nothrow = FALSE
-					if (map && !map.faction1_can_cross_blocks() && list(CIVILIAN, PIRATES, INDIANS, GREEK, ARAB, VIETNAMESE).Find(H.original_job.base_type_flag()))
+					if (map && !map.faction1_can_cross_blocks() && list(CIVILIAN, PIRATES, INDIANS, GREEK, ARAB, VIETNAMESE, CHINESE).Find(H.original_job.base_type_flag()))
 						nothrow = TRUE
-					else if (map && !map.faction2_can_cross_blocks() && list(BRITISH, FRENCH, PORTUGUESE, SPANISH, DUTCH, ROMAN, JAPANESE, RUSSIAN, GERMAN, AMERICAN, CHINESE).Find(H.original_job.base_type_flag()))
+					else if (map && !map.faction2_can_cross_blocks() && list(BRITISH, FRENCH, PORTUGUESE, SPANISH, DUTCH, ROMAN, JAPANESE, RUSSIAN, GERMAN, AMERICAN).Find(H.original_job.base_type_flag()))
 						nothrow = TRUE
 					if (nothrow)
 						src << "<span class = 'danger'>You can't throw a molotov yet.</span>"
@@ -323,20 +323,24 @@
 	if (!item || item.nothrow) return //Grab processing has a chance of returning null
 
 	var/throwtime_divider = 4
-	if (isitem(item))
+	if (istype(item, /obj/item/weapon/material/thrown))
+		var/mob/living/carbon/human/H = src
+		H.adaptStat("throwing", 0.05)
+	else if (isitem(item))
+		var/mob/living/carbon/human/H = src
 		var/obj/item/I = item
 		switch (I.w_class)
 			if (2)
-				throwtime_divider *= 3
+				throwtime_divider *= 3 + H.getStat("throwing")/100
 			if (3)
-				throwtime_divider *= 2
+				throwtime_divider *= 2 + H.getStat("throwing")/100
 			if (4)
-				throwtime_divider *= 1
+				throwtime_divider *= 1 + H.getStat("throwing")/100
 			if (5)
-				throwtime_divider *= 0.5
+				throwtime_divider *= 0.5 + H.getStat("throwing")/100
 	else if (ismob(item))
-		throwtime_divider *= 0.5
-
+		var/mob/living/carbon/human/H = src
+		throwtime_divider *= 0.5 + H.getStat("throwing")/100
 	//actually throw it!
 
 	visible_message("<span class = 'warning'>[src] prepares to throw \the [item]!</span>")

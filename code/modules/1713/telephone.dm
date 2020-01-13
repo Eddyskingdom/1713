@@ -10,6 +10,7 @@
 	opacity = FALSE
 	force = WEAPON_FORCE_WEAK+3
 	throwforce = WEAPON_FORCE_WEAK
+	w_class = 4
 	var/phonenumber = 0
 	var/ringing = FALSE
 	var/ringingnum = FALSE
@@ -143,6 +144,7 @@ var/list/global/phone_numbers = list()
 	throwforce = WEAPON_FORCE_WEAK
 	wireless = TRUE
 	maxrange = 20
+	w_class = 2
 	var/list/contacts = list()
 
 /obj/item/weapon/telephone/mobile/attack_self(var/mob/user as mob)
@@ -222,4 +224,18 @@ var/list/global/phone_numbers = list()
 			if (TLG.phonenumber == target && TLG.phonenumber != origin)
 				if (!TLG.ringing)
 					TLG.ringproc(origin, originphone)
+			for (var/mob/living/carbon/human/H in range(maxrange,src))
+				for (var/obj/item/weapon/telephone/TLGH in H)
+					if (TLGH.phonenumber == target && TLGH.phonenumber != origin)
+						if (!TLGH.ringing)
+							TLGH.ringproc(origin, originphone)
 	lastproc = world.time+3
+
+/obj/item/weapon/telephone/wireless
+	name = "telephone"
+	desc = "Used to communicate with other telephones. No number."
+	icon_state = "telephone"
+	connected = TRUE
+
+	wireless = TRUE
+	maxrange = 30
