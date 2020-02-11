@@ -282,6 +282,13 @@
 			rolled = TRUE
 	update_clothing_icon()
 
+/obj/item/clothing/under/ww2/japuni_summer
+	name = "japanese uniform"
+	desc = "A imperial japanese army uniform. This one meant for tropical warm climates."
+	icon_state = "japuni_summer"
+	item_state = "ww2_japuni"
+	worn_state = "ww2_japuni"
+
 obj/item/clothing/under/ww2/japuni_med
 	name = "japanese medic uniform"
 	desc = "A imperial japanese army uniform, this one bears the rank of a medic."
@@ -552,6 +559,13 @@ obj/item/clothing/head/ww2/chicap2
 		..()
 		hold.can_hold = list(/obj/item/ammo_casing, /obj/item/ammo_magazine, /obj/item/weapon/grenade, /obj/item/weapon/attachment/bayonet,/obj/item/weapon/shovel/trench,/obj/item/weapon/reagent_containers/food/drinks/bottle/canteen,/obj/item/weapon/reagent_containers/food/snacks/MRE,/obj/item/stack/medical/bruise_pack)
 
+/obj/item/clothing/accessory/storage/webbing/russian
+	name = "Russian"
+	desc = "4 green poly pouches."
+	icon_state = "russian_vest"
+	item_state = "russian_vest"
+	slots = 6
+
 /obj/item/clothing/accessory/storage/webbing/ww1/german
 	name = "german webbing"
 	icon_state = "german_vest"
@@ -801,6 +815,13 @@ obj/item/clothing/under/ww2/us
 	item_state = "usuni2"
 	worn_state = "usuni2"
 
+obj/item/clothing/under/ww2/us_navy
+	name = "U.S. Navy uniform"
+	desc = "An american uniform, used by sailors in the US navy during WW2."
+	icon_state = "us_navy"
+	item_state = "us_navy"
+	worn_state = "us_navy"
+
 obj/item/clothing/under/ww2/us_cap
 	name = "american captain uniform"
 	desc = "An american uniform, used by captains in the US army."
@@ -939,6 +960,13 @@ obj/item/clothing/head/ww2/us_nco_cap
 	icon_state = "usnco_cap"
 	item_state = "usnco_cap"
 	worn_state = "usnco_cap"
+
+obj/item/clothing/head/ww2/us_sailor_hat
+	name = "us sailor hat"
+	desc = "A hat worn by american sailors."
+	icon_state = "sailor_hat"
+	item_state = "sailor_hat"
+	worn_state = "sailor_hat"
 
 obj/item/clothing/head/ww2/german_tanker
 	name = "german tanker headset"
@@ -1105,13 +1133,20 @@ obj/item/clothing/head/ww2/soviet_fieldcap
 
 /obj/item/clothing/head/helmet/ww2/ss
 	name = "german ss helmet"
-	desc = "The typical rounded steel helmet of the Schutzstaffel."
+	desc = "The typical rounded steel helmet of the Schutzstaffel. This one is prepared with camo."
 	icon_state = "sshelm"
 	item_state = "sshelm"
 	worn_state = "sshelm"
 	body_parts_covered = HEAD
 	flags_inv = BLOCKHEADHAIR
 	armor = list(melee = 42, arrow = 32, gun = 12, energy = 15, bomb = 42, bio = 20, rad = FALSE)
+
+/obj/item/clothing/head/helmet/ww2/ss/dark
+	name = "german ss helmet"
+	desc = "The typical rounded steel helmet of the Schutzstaffel."
+	icon_state = "sshelm_dark"
+	item_state = "sshelm_dark"
+	worn_state = "sshelm_dark"
 
 /obj/item/clothing/head/helmet/ww2/soviet
 	name = "soviet helmet"
@@ -1313,6 +1348,17 @@ obj/item/clothing/head/ww2/soviet_fieldcap
 	icon_state = "blackbomberjacket"
 	item_state = "blackbomberjacket"
 	worn_state = "blackbomberjacket"
+	body_parts_covered = UPPER_TORSO||ARMS
+	cold_protection = UPPER_TORSO|ARM_LEFT|ARM_RIGHT
+	armor = list(melee = 10, arrow = 0, gun = FALSE, energy = 15, bomb = 5, bio = 30, rad = 30)
+	value = 100
+
+/obj/item/clothing/suit/storage/coat/ww2/biker
+	name = "biker jacket"
+	desc = "A black jacket meant for high-alititude temperatures."
+	icon_state = "biker"
+	item_state = "biker"
+	worn_state = "biker"
 	body_parts_covered = UPPER_TORSO||ARMS
 	cold_protection = UPPER_TORSO|ARM_LEFT|ARM_RIGHT
 	armor = list(melee = 10, arrow = 0, gun = FALSE, energy = 15, bomb = 5, bio = 30, rad = 30)

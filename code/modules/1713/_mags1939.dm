@@ -149,6 +149,17 @@ obj/item/ammo_magazine/dp
 	weight = 0.32
 	multiple_sprites = TRUE
 
+/obj/item/ammo_magazine/svd
+	name = "SVD magazine (7.62x54mmR)"
+	icon_state = "g43"
+	caliber = "a762x54"
+	mag_type = MAGAZINE
+
+	ammo_type = /obj/item/ammo_casing/a762x54
+	max_ammo = 10
+	weight = 0.32
+	multiple_sprites = TRUE
+
 /obj/item/ammo_magazine/avtomat
 	name = "avtomat magazine (7.62x54mm)"
 	icon_state = "g43"
@@ -219,7 +230,7 @@ obj/item/ammo_magazine/dp
 	clip = TRUE
 
 /obj/item/ammo_magazine/bar
-	name = "magazine (30-06)"
+	name = "BAR magazine (30-06)"
 	icon_state = "bar"
 	caliber = "a3006_weak"
 
@@ -230,8 +241,9 @@ obj/item/ammo_magazine/dp
 	multiple_sprites = TRUE
 
 /obj/item/ammo_magazine/thompson
-	name = "Thomspon magazine (.45)"
+	name = "Thompson magazine (.45)"
 	icon_state = "thompson"
+	caliber = "a45acp"
 	mag_type = MAGAZINE
 	ammo_type = /obj/item/ammo_casing/a45acp
 	max_ammo = 20

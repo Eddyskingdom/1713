@@ -29,11 +29,66 @@
 /obj/structure/religious/olmec_head
 	name = "large stone head"
 	desc = "A large stone head."
-	icon = 'icons/obj/cross.dmi'
+	icon = 'icons/obj/statue.dmi'
 	icon_state = "olmec_head"
 	density = TRUE
 	anchored = TRUE
 	layer = 3.2
+
+/obj/structure/religious/moai
+	name = "moai statue"
+	desc = "A large stone statue."
+	icon = 'icons/obj/statue.dmi'
+	icon_state = "moai2_bottom"
+	density = TRUE
+	anchored = TRUE
+	layer = 6
+	var/image/top = null
+
+	New()
+		..()
+		top = image(icon='icons/obj/statue.dmi', icon_state = "moai2_top", layer=3.2)
+		top.pixel_y = 32
+		update_icon()
+
+	update_icon()
+		..()
+		overlays.Cut()
+		overlays += top
+
+/obj/structure/religious/moai/long
+	name = "long moai statue"
+	icon_state = "moai1_bottom"
+
+	New()
+		..()
+		top.icon_state = "moai1_top"
+		update_icon()
+
+
+
+/obj/structure/religious/aztec_statue
+	name = "aztec statue"
+	desc = "An aztec-style statue."
+	icon = 'icons/obj/statue.dmi'
+	icon_state = "aztec_statue"
+	density = TRUE
+	anchored = TRUE
+	layer = 3.2
+
+/obj/structure/religious/tiki_statue
+	name = "tiki statue"
+	desc = "A tiki style wood statue."
+	icon = 'icons/obj/statue.dmi'
+	icon_state = "tikistatue1"
+	density = TRUE
+	anchored = TRUE
+	layer = 3.2
+	flammable = TRUE
+
+/obj/structure/religious/tiki_statue/small
+	name = "tiki statue"
+	icon_state = "tikistatue2"
 
 /obj/structure/religious/totem_pole
 	name = "wood totem pole"
@@ -338,12 +393,12 @@
 		//pleased
 		else if (power >= 150 && power < 250)
 			if (prob(power/250))
-				if (weather == WEATHER_RAIN || WEATHER_SNOW)
+				if (weather == WEATHER_WET)
 					change_weather_somehow()
 					visible_message("The gods have blessed us with good weather!")
 		//very pleased
 		else if (power >= 250)
-			if (weather == WEATHER_RAIN || WEATHER_SNOW)
+			if (weather == WEATHER_WET)
 				change_weather_somehow()
 			visible_message("The gods have blessed us with good weather!")
 			if (prob(50) && human_clients_mob_list.len>0)

@@ -442,6 +442,13 @@
 	item_state = "modern2"
 	worn_state = "modern2"
 
+/obj/item/clothing/under/expensive
+	name = "shirt outfit"
+	desc = "An outfit composed of a expensive white shirt and black trousers."
+	icon_state = "bman"
+	item_state = "bman"
+	worn_state = "bman"
+
 /obj/item/clothing/under/modern3
 	name = "grey outfit"
 	desc = "An outfit composed of a white shirt and grey trousers."
@@ -463,12 +470,82 @@
 	item_state = "modern7"
 	worn_state = "modern7"
 
+/obj/item/clothing/under/swat
+	name = "swat outfit"
+	desc = "A uniform used by police special forces."
+	icon_state = "swat"
+	item_state = "swat"
+	worn_state = "swat"
+
+/obj/item/clothing/under/combat
+	name = "combat outfit"
+	desc = "A combat uniform plated with kevlar."
+	icon_state = "combat"
+	item_state = "combat"
+	worn_state = "combat"
+
+/obj/item/clothing/under/police
+	name = "police outfit"
+	desc = "A uniform used by police forces."
+	icon_state = "police"
+	item_state = "police"
+	worn_state = "police"
+
+/obj/item/clothing/under/prisoner
+	name = "prison outfit"
+	desc = "Normally worn by criminals and scum."
+	icon_state = "prisoner"
+	item_state = "prisoner"
+	worn_state = "prisoner"
+
+/obj/item/clothing/under/milrus2
+	name = "russian military outfit"
+	desc = "An outfit composed of camo pants and shirt."
+	icon_state = "milrus2"
+	item_state = "milrus2"
+	worn_state = "milrus2"
+
 /obj/item/clothing/under/baily
 	name = "security outfit"
 	desc = "An outfit composed of a green jacket and black pants."
 	icon_state = "baily"
 	item_state = "baily"
 	worn_state = "baily"
+
+/obj/item/clothing/under/tactical1
+	name = "tactical outfit"
+	desc = "An outfit composed of a camo cargo pants and tan ubac."
+	icon_state = "tactical1"
+	item_state = "tactical1"
+	worn_state = "tactical1"
+
+/obj/item/clothing/under/pmc
+	name = "pmc outfit"
+	desc = "A outfit used by PMC units."
+	icon_state = "pmc"
+	item_state = "pmc"
+	worn_state = "pmc"
+
+/obj/item/clothing/under/mafia
+	name = "fancy outfit"
+	desc = "A outfit that is expensive and has style."
+	icon_state = "mafia"
+	item_state = "mafia"
+	worn_state = "mafia"
+
+/obj/item/clothing/under/engi
+	name = "worker outfit"
+	desc = "A outfit used by construction workers."
+	icon_state = "pmc"
+	item_state = "pmc"
+	worn_state = "pmc"
+
+/obj/item/clothing/under/gorka
+	name = "gorka outfit"
+	desc = "A gorka outfit used by Spetsnaz."
+	icon_state = "gorka"
+	item_state = "gorka"
+	worn_state = "gorka"
 
 /obj/item/clothing/under/modern8
 	name = "modern skirt"

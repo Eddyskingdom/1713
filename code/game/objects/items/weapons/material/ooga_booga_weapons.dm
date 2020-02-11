@@ -52,7 +52,6 @@
 	icon = 'icons/obj/old_weapons.dmi'
 	force = 7
 	attack_verb = list("hit","bashed","poked")
-	item_state = "spear"
 	sharp = FALSE
 	edge = FALSE
 	slot_flags = SLOT_BELT
@@ -64,6 +63,24 @@
 	flammable = TRUE
 	var/sharpened = FALSE
 
+	var/ants = FALSE
+
+/obj/item/weapon/branch/attack_self(mob/living/carbon/human/user as mob)
+	if (ants)
+		user << "You start licking some ants off the stick..."
+		if (do_after(user, 50, src))
+			if (src && ants)
+				user << "You finish eating some ants."
+				icon_state = "sharpened_stick"
+				ants = FALSE
+				if (user.gorillaman)
+					user.mood += 10
+				else
+					user.mood -= 10
+				user.nutrition += 80
+				return
+	else
+		..()
 /obj/item/weapon/branch/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (W.edge && !sharpened)
 		user << "You start sharpening the stick..."
@@ -78,6 +95,17 @@
 				sharpened = TRUE
 				return
 		return
+	else if (sharpened && istype(W, /obj/item/weapon/flint))
+		var/obj/item/weapon/flint/F = W
+		if (F.sharpened)
+			user << "You start attaching the flint to the stick..."
+			if (do_after(user, 100, src))
+				if (src && F && F.sharpened)
+					user << "You finish making the flint axe."
+					new/obj/item/weapon/material/hatchet/tribal/flint(user.loc)
+					qdel(F)
+					qdel(src)
+					return
 	else
 		..()
 

@@ -93,6 +93,10 @@
 				world << "<font size=3 color='red'><center>EMERGENCY BROADCAST SYSTEM<br>Weapons and ammunition have been airdropped in the area!</center></font>"
 				new/obj/structure/closet/crate/airdrops/weapons(locationt)
 
+			if("military")
+				world << "<font size=3 color='red'><center>EMERGENCY BROADCAST SYSTEM<br>military equipment have been airdropped in the area!</center></font>"
+				new/obj/structure/closet/crate/airdrops/military(locationt)
+
 			if("medicine")
 				world << "<font size=3 color='red'><center>EMERGENCY BROADCAST SYSTEM<br>Medicine has been airdropped in the area!</center></font>"
 				new/obj/structure/closet/crate/airdrops/medicine(locationt)
@@ -159,9 +163,9 @@
 		for (var/turf/floor/grass/G)
 			G.update_icon()
 		spawn(100)
-			change_weather(WEATHER_RAIN)
+			change_weather(WEATHER_WET)
 		spawn(15000)
-			change_weather(WEATHER_SNOW)
+			change_weather(WEATHER_WET)
 			for (var/turf/floor/dirt/D in get_area_turfs(/area/caribbean/nomads/forest))
 				var/area/A = get_area(D)
 				if (A.location == AREA_OUTSIDE && prob(40) && !istype(D, /turf/floor/dirt/underground) && !istype(D, /turf/floor/dirt/dust))
@@ -191,7 +195,7 @@
 		for (var/turf/floor/grass/G)
 			G.ChangeTurf(/turf/floor/winter/grass)
 		spawn(100)
-			change_weather(WEATHER_SNOW)
+			change_weather(WEATHER_WET)
 		spawn(800)
 		for (var/turf/floor/beach/water/shallowsaltwater/SW)
 			if (SW.water_level <= 50 && SW.z > 1)

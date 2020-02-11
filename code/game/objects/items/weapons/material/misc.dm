@@ -197,6 +197,45 @@
 	slot_flags = SLOT_BELT
 	block_chance = 15
 	cooldownw = 5
+	var/chopping_speed = 1.90
+
+/obj/item/weapon/material/machete
+	name = "machete"
+	desc = "A small sized machete used by wood cutters."
+	icon = 'icons/obj/weapons.dmi'
+	icon_state = "machete"
+	force_divisor = 0.7 // 30 with hardness 60 (steel)
+	thrown_force_divisor = 0.75 // 15 with weight 20 (steel)
+	w_class = 2
+	sharp = TRUE
+	edge = TRUE
+	material = "iron"
+	attack_verb = list("chopped", "torn", "cut")
+	applies_material_colour = FALSE
+	value = 15
+	slot_flags = SLOT_BELT
+	block_chance = 15
+	cooldownw = 5
+	var/chopping_speed = 1.50
+
+/obj/item/weapon/material/machete1
+	name = "machete"
+	desc = "A small sized machete used by wood cutters."
+	icon = 'icons/obj/weapons.dmi'
+	icon_state = "machete1"
+	force_divisor = 0.6 // 30 with hardness 60 (steel)
+	thrown_force_divisor = 0.75 // 15 with weight 20 (steel)
+	w_class = 2
+	sharp = TRUE
+	edge = TRUE
+	material = "iron"
+	attack_verb = list("chopped", "torn", "cut")
+	applies_material_colour = FALSE
+	value = 15
+	slot_flags = SLOT_BELT
+	block_chance = 15
+	cooldownw = 5
+	var/chopping_speed = 1.0
 
 /obj/item/weapon/material/hatchet/tribal
 	name = "hatchet"
@@ -204,11 +243,26 @@
 	icon = 'icons/misc/tribal.dmi'
 	icon_state = "tribalaxe"
 	material = "stone"
+	item_state = "bonehatchet"
 	force_divisor = 0.5 // 30 with hardness 60 (steel)
 	thrown_force_divisor = 0.75 // 13 with weight 20 (steel)
 	value = 12
 	block_chance = 15
 	cooldownw = 5
+	chopping_speed = 1.35
+/obj/item/weapon/material/hatchet/tribal/bone
+	material = "bone"
+	desc = "A crude hatchet, made with wood and bone."
+	icon_state = "bonehatchet"
+	item_state = "bonehatchet"
+	chopping_speed = 1.75
+
+/obj/item/weapon/material/hatchet/tribal/flint
+	material = "flint"
+	desc = "A very crude hatchet, made with wood and flint."
+	icon = 'icons/obj/old_weapons.dmi'
+	icon_state = "flint_axe"
+	chopping_speed = 1.5
 
 /obj/item/weapon/material/boarding_axe
 	name = "boarding axe"
@@ -547,8 +601,8 @@
 	cooldownw = 11
 
 /obj/item/weapon/material/hatchet/bone_battleaxe
-	name = "bone battle axe"
-	desc = "A very sharpened bone axe blade upon a long wood handle. Not pratical for chopping wood, but pratical for chopping limbs."
+	name = "battle axe"
+	desc = "A very sharp bone axe blade upon a long wood handle. Not pratical for chopping wood, but pratical for chopping limbs."
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "bone_battleaxe"
 	item_state = "bone_battleaxe"
@@ -564,3 +618,22 @@
 	slot_flags = SLOT_BELT
 	block_chance = 15
 	cooldownw = 11
+
+/obj/item/weapon/material/scepter
+	name = "gold scepter"
+	sharp = FALSE
+	edge = FALSE
+	desc = "An old golden staff, doesn't do too much damage but its fast at blocking and hitting"
+	slot_flags = SLOT_SHOULDER | SLOT_BELT
+	icon_state = "scepter"
+	item_state = "scepter"
+	default_material = "gold"
+	throw_speed = 6
+	throw_range = 10
+	allow_spin = TRUE
+	force_divisor = 0.5 // 30 with hardness 60 (steel)
+	thrown_force_divisor = 0.7 // 16 with weight 20 (steel)
+	attack_verb = list("bashed","poked","beaten")
+	value = 6
+	block_chance = 20
+	cooldownw = 5

@@ -64,6 +64,30 @@
 	item_state = "commando_bandana"
 	body_parts_covered = HEAD
 
+/obj/item/clothing/accessory/storage/webbing/ubac
+	name = "Tan UBAC"
+	desc = "A flexible, close-fitting shirt with camouflage sleeves designed to be worn under combat equipment. This one is tan."
+	icon_state = "ubac_tan"
+	item_state = "ubac_tan"
+
+/obj/item/clothing/accessory/storage/webbing/ubacgreen
+	name = "Green UBAC"
+	desc = "A flexible, close-fitting shirt with camouflage sleeves designed to be worn under combat equipment. This one is green."
+	icon_state = "ubac_green"
+	item_state = "ubac_green"
+
+/obj/item/clothing/accessory/storage/webbing/ubacblack
+	name = "Black UBAC"
+	desc = "A flexible, close-fitting shirt with camouflage sleeves designed to be worn under combat equipment. This one is black."
+	icon_state = "ubac_black"
+	item_state = "ubac_black"
+
+/obj/item/clothing/accessory/storage/webbing/sweater
+	name = "white sweater"
+	desc = "A sweater to help you be comfy."
+	icon_state = "sweater"
+	item_state = "sweater"
+
 /obj/item/clothing/accessory/storage/webbing/light
 	name = "light webbing"
 	desc = "a light webbing, with lower capacity but permitting fast movement."
@@ -302,6 +326,18 @@
 	body_parts_covered = FACE|EYES|HEAD
 	w_class = 1
 	restricts_view = 2
+	heat_protection = HEAD|FACE|EYES
+
+/obj/item/clothing/mask/sovietbala
+	name = "green balaclava"
+	desc = "A green balaclava, covering the mouth."
+	icon_state = "sovietbala"
+	item_state = "sovietbala"
+	worn_state = "sovietbala"
+	body_parts_covered = FACE|EYES|HEAD
+	w_class = 1
+	restricts_view = 2
+	heat_protection = HEAD|FACE|EYES
 
 /obj/item/clothing/accessory/storage/webbing/green_webbing
 	name = "green chest webbing"
@@ -322,6 +358,47 @@
 	New()
 		..()
 		hold.can_hold = list(/obj/item/weapon/material/kitchen/utensil,/obj/item/weapon/key,/obj/item/ammo_casing, /obj/item/ammo_magazine, /obj/item/weapon/grenade,/obj/item/weapon/attachment,/obj/item/weapon/gun/projectile/pistol,/obj/item/weapon/gun/projectile/revolver,/obj/item/weapon/handcuffs,/obj/item/weapon/reagent_containers/food/drinks/bottle/canteen,/obj/item/stack/medical/bruise_pack)
+
+/obj/item/clothing/accessory/storage/webbing/pouches
+	name = "black pouches"
+	desc = "a set of pouches to store magazines in."
+	slots = 3
+	icon_state = "black_pouches"
+	item_state = "black_pouches"
+	New()
+		..()
+		hold.can_hold = list(/obj/item/weapon/material/kitchen/utensil,/obj/item/weapon/key,/obj/item/ammo_casing, /obj/item/ammo_magazine)
+
+/obj/item/clothing/accessory/storage/webbing/largepouches
+	name = "large black pouches"
+	desc = "a large set of pouches to store magazines in."
+	slots = 6
+	icon_state = "largepouches"
+	item_state = "largepouches"
+	New()
+		..()
+		hold.can_hold = list(/obj/item/weapon/material/kitchen/utensil,/obj/item/weapon/key,/obj/item/ammo_casing, /obj/item/ammo_magazine)
+
+/obj/item/clothing/accessory/storage/webbing/largepouchestan
+	name = "large tan pouches"
+	desc = "a large set of pouches to store magazines in."
+	slots = 6
+	icon_state = "largepouches_tan"
+	item_state = "largepouches_tan"
+	New()
+		..()
+		hold.can_hold = list(/obj/item/weapon/material/kitchen/utensil,/obj/item/weapon/key,/obj/item/ammo_casing, /obj/item/ammo_magazine)
+
+/obj/item/clothing/accessory/storage/webbing/tanpouches
+	name = "tan pouches"
+	desc = "a set of pouches to store magazines in."
+	slots = 3
+	icon_state = "tan_pouches"
+	item_state = "tan_pouches"
+	New()
+		..()
+		hold.can_hold = list(/obj/item/weapon/material/kitchen/utensil,/obj/item/weapon/key,/obj/item/ammo_casing, /obj/item/ammo_magazine)
+
 
 /obj/item/clothing/head/nbc
 	name = "yellow NBC hood"
@@ -371,4 +448,90 @@
 	worn_state = "bxsuit"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|FEET|HANDS
 	armor = list(melee = 140, arrow = 200, gun = 150, energy = 100, bomb = 100, bio = 100, rad = 80)
+	ripable = FALSE
+
+/obj/item/clothing/suit/a6b45
+	name = "6B45 heavy vest"
+	desc = "6B45 is a modular bullet-resistant vest. It comprises frontal and rear section and soft-armour shoulder and side protection."
+	icon_state = "a6b45"
+	item_state = "a6b45"
+	worn_state = "a6b45"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	armor = list(melee = 103, arrow = 110, gun = 110, energy = 67, bomb = 70, bio = 40, rad = 36)
+	var/slots = 4
+	ripable = FALSE
+
+/obj/item/clothing/suit/swat
+	name = "swat heavy vest"
+	desc = "a heavy NIJ level IV vest, used by swat officers."
+	icon_state = "swat"
+	item_state = "swat"
+	worn_state = "swat"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	armor = list(melee = 105, arrow = 80, gun = 116, energy = 70, bomb = 74, bio = 44, rad = 40)
+	var/slots = 6
+	ripable = FALSE
+
+/obj/item/clothing/suit/heavyvest1
+	name = "heavy vest"
+	desc = "a heavy NIJ level IV vest."
+	icon_state = "heavypolice"
+	item_state = "heavypolice"
+	worn_state = "heavypolice"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	armor = list(melee = 50, arrow = 40, gun = 112, energy = 68, bomb = 40, bio = 32, rad = 20)
+	var/slots = 6
+	ripable = FALSE
+
+/obj/item/clothing/suit/medvest
+	name = "medium vest"
+	desc = "a heavy NIJ level III vest."
+	icon_state = "mediumvest"
+	item_state = "mediumvest"
+	worn_state = "mediumvest"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	armor = list(melee = 30, arrow = 40, gun = 84, energy = 47, bomb = 35, bio = 29, rad = 10)
+	var/slots = 6
+	ripable = FALSE
+
+/obj/item/clothing/suit/police
+	name = "police bulletproof vest"
+	desc = "a police vest (Level III)."
+	icon_state = "policevest"
+	item_state = "policevest"
+	worn_state = "policevest"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	armor = list(melee = 60, arrow = 20, gun = 74, energy = 40, bomb = 20, bio = 32, rad = 20)
+	ripable = FALSE
+
+/obj/item/clothing/suit/a6b44
+	name = "6B44 vest"
+	desc = "6B44 is a modular bullet-resistant vest."
+	icon_state = "a6b44"
+	item_state = "a6b44"
+	worn_state = "a6b44"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	armor = list(melee = 80, arrow = 100, gun = 93, energy = 56, bomb = 64, bio = 40, rad = 36)
+	var/slots = 4
+	ripable = FALSE
+
+/obj/item/clothing/suit/a6b28
+	name = "6B28 plate carrier"
+	desc = "6B28 is a level III plate carrier."
+	icon_state = "a6b28"
+	item_state = "a6b28"
+	worn_state = "a6b28"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	armor = list(melee = 74, arrow = 87, gun = 83, energy = 67, bomb = 56, bio = 40, rad = 36)
+	var/slots = 3
+	ripable = FALSE
+
+/obj/item/clothing/suit/b3
+	name = "B3A1 Vest"
+	desc = "A russian bulletproof vest, made with glory."
+	icon_state = "b3vest"
+	item_state = "b3vest"
+	worn_state = "b3vest"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|FEET|HANDS
+	armor = list(melee = 65, arrow = 100, gun = 69, energy = 30, bomb = 40, bio = 10, rad = 30)
 	ripable = FALSE

@@ -419,6 +419,10 @@
 		if (istype(target_mob, /mob/living/simple_animal/hostile/zombie))
 			var/mob/living/simple_animal/hostile/zombie/Z = target_mob
 			Z.limb_hit(hit_zone)
+	if (istype(target_mob, /mob/living/simple_animal/hostile/human) && target_mob.stat != DEAD && prob(33))
+		var/list/screamlist = list('sound/voice/screams/scream1.ogg','sound/voice/screams/scream2.ogg','sound/voice/screams/scream3.ogg','sound/voice/screams/scream4.ogg','sound/voice/screams/scream5.ogg','sound/voice/screams/scream6.ogg',)
+		playsound(loc, pick(screamlist), 100, extrarange = 50)
+	..()
 	//admin logs
 	if (!no_attack_log)
 		if (istype(firer, /mob))
@@ -429,8 +433,9 @@
 
 			admin_attack_log(firer, target_mob, attacker_message, victim_message, admin_message)
 		else
-			target_mob.attack_log += "\[[time_stamp()]\] <b>UNKNOWN SUBJECT (No longer exists)</b> shot <b>[target_mob]/[target_mob.ckey]</b> with <b>\a [src]</b>"
-			msg_admin_attack("UNKNOWN shot [target_mob] ([target_mob.ckey]) with \a [src] (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[target_mob.x];Y=[target_mob.y];Z=[target_mob.z]'>JMP</a>)")
+			if (target_mob.ckey)
+				target_mob.attack_log += "\[[time_stamp()]\] <b>UNKNOWN SUBJECT (No longer exists)</b> shot <b>[target_mob]/[target_mob.ckey]</b> with <b>\a [src]</b>"
+				msg_admin_attack("UNKNOWN shot [target_mob] ([target_mob.ckey]) with \a [src] (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[target_mob.x];Y=[target_mob.y];Z=[target_mob.z]'>JMP</a>)")
 
 	//sometimes bullet_act() will want the projectile to continue flying
 	if (result == PROJECTILE_CONTINUE)
@@ -566,7 +571,15 @@
 							if (O.bullet_act(src, def_zone) != PROJECTILE_CONTINUE)
 								if (O && !O.gcDestroyed)
 									if (O.density && !istype(O, /obj/structure))
-										passthrough = FALSE
+										if (istype(O, /obj/covers))
+											var/obj/covers/CVR = O
+											if (prob(100-CVR.hardness) && CVR.density)
+												passthrough = TRUE
+												passthrough_message = "<span class = 'warning'>The [name] penetrates through \the [CVR]!</span>"
+											else
+												passthrough = FALSE
+										else
+											passthrough = FALSE
 									else if (istype(O, /obj/structure))
 										var/obj/structure/S = O
 										if (!S.CanPass(src, original))
